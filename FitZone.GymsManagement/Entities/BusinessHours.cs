@@ -12,6 +12,8 @@
 
         public TimeSpan ClosingTime { get; set;}
 
+        public bool IsClosed { get; set; }
+
         public string Comment { get; set; }
     }
 }
