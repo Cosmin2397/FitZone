@@ -6,7 +6,7 @@ namespace FitZone.GymsManagement.Repositories.Interfaces
     {
         Task<Gym> AddGym(Gym gym);
 
-        Task<Gym> RemoveGym(Guid id);
+        Task<bool> RemoveGym(Guid id);
 
         Task<Gym> UpdateGym(Gym gym, Guid id);
 

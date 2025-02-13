@@ -6,7 +6,7 @@ namespace FitZone.GymsManagement.Repositories.Interfaces
     {
         Task<BusinessHours> AddWorkingHours(BusinessHours workingHours);
 
-        Task<BusinessHours> RemoveWorkingHours(Guid id);
+        Task<bool> RemoveWorkingHours(Guid id);
 
         Task<BusinessHours> UpdateWorkingHours(BusinessHours gym, Guid id);
 

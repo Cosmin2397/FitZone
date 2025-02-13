@@ -67,24 +67,25 @@ namespace FitZone.GymsManagement.Repositories
                 throw;
             }
         }
-
-        public async Task<Gym> RemoveGym(Guid id)
+        public async Task<bool> RemoveGym(Guid id)
         {
             var gym = await _context.Gyms.FirstOrDefaultAsync(a => a.Id == id);
+            if (gym == null)
+            {
+                return false; // Nu s-a găsit sala de sport
+            }
+
             try
             {
-                if (gym != null)
-                {
-                    _context.Gyms.Remove(gym);
-                    await _context.SaveChangesAsync();
-                }
+                _context.Gyms.Remove(gym);
+                await _context.SaveChangesAsync();
+                return true; // Ștergere reușită
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Eroare neașteptată: {ex.Message}");
-                throw;
+                return false; // Eșec la ștergere
             }
-            return gym;
         }
 
         public async Task<Gym> UpdateGym(Gym gym, Guid id)

@@ -68,23 +68,27 @@ namespace FitZone.GymsManagement.Repositories
             }
         }
 
-        public async Task<BusinessHours> RemoveWorkingHours(Guid id)
+        public async Task<bool> RemoveWorkingHours(Guid id)
         {
-            var dayBusinessHours = await _context.GymBusinessHours.FirstOrDefaultAsync(a => a.Id == id);
+            var weekBusinessHours = await _context.GymBusinessHours.FirstOrDefaultAsync(a => a.GymId == id);
             try
             {
-                if (dayBusinessHours != null)
+                if (weekBusinessHours != null)
                 {
-                    _context.GymBusinessHours.Remove(dayBusinessHours);
+                    _context.GymBusinessHours.RemoveRange(weekBusinessHours);
                     await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Eroare neașteptată: {ex.Message}");
-                throw;
+                return false;
             }
-            return dayBusinessHours;
         }
 
         public async Task<BusinessHours> UpdateWorkingHours(BusinessHours businessHours, Guid id)
