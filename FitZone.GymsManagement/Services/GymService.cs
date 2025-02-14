@@ -29,6 +29,7 @@ namespace FitZone.GymsManagement.Services
                     foreach (var workingHour in gym.WeekBusinessHours)
                     {
                         workingHour.GymId = addedGym.GymData.Id;
+                        addedGym.WeekBusinessHours = new List<Entities.BusinessHours>();
                         addedGym.WeekBusinessHours.Add(await workingHoursRepository.AddWorkingHours(workingHour));
                     }
                 }
@@ -85,6 +86,7 @@ namespace FitZone.GymsManagement.Services
                 {
                     foreach (var workingHour in gym.WeekBusinessHours)
                     {
+                        updatedGym.WeekBusinessHours = new List<Entities.BusinessHours>();
                         updatedGym.WeekBusinessHours.Add(await workingHoursRepository.UpdateWorkingHours(workingHour, workingHour.Id));
                     }
                 }
