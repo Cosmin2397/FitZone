@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.GymsManagement", "FitZone.GymsManagement\FitZone.GymsManagement.csproj", "{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.AppHost", "FitZone.AppHost\FitZone.AppHost.csproj", "{768508AC-B5CE-4B26-B38D-7E611E6BBB28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.ServiceDefaults", "FitZone.ServiceDefaults\FitZone.ServiceDefaults.csproj", "{38C3554B-FDC0-B85D-F5C3-56CD7B9B19B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +21,14 @@ Global
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{768508AC-B5CE-4B26-B38D-7E611E6BBB28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{768508AC-B5CE-4B26-B38D-7E611E6BBB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{768508AC-B5CE-4B26-B38D-7E611E6BBB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{768508AC-B5CE-4B26-B38D-7E611E6BBB28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38C3554B-FDC0-B85D-F5C3-56CD7B9B19B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C3554B-FDC0-B85D-F5C3-56CD7B9B19B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C3554B-FDC0-B85D-F5C3-56CD7B9B19B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C3554B-FDC0-B85D-F5C3-56CD7B9B19B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
