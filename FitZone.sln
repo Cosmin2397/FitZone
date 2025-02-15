@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.GymsManagement", "FitZone.GymsManagement\FitZone.GymsManagement.csproj", "{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.ScheduleService", "FitZone.ScheduleService\FitZone.ScheduleService.csproj", "{1CD68DD9-10D5-4289-B105-D8A121812905}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +19,17 @@ Global
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CD68DD9-10D5-4289-B105-D8A121812905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CD68DD9-10D5-4289-B105-D8A121812905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CD68DD9-10D5-4289-B105-D8A121812905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CD68DD9-10D5-4289-B105-D8A121812905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
+		{1CD68DD9-10D5-4289-B105-D8A121812905} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF9FFD14-ADB0-47BD-9B0D-27BEB58DEA7D}
