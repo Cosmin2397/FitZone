@@ -1,0 +1,30 @@
+﻿using FitZone.ScheduleService.Entities.Enums;
+
+namespace FitZone.ScheduleService.DTOs
+{
+    public class CreateTrainingDTO
+    {
+        public string TrainingName { get; set; }
+
+        public string TrainingDescription { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime FinishDate { get; set; }
+
+        public Guid GymId { get; set; }
+
+        public Guid TrainerId { get; set; }
+
+        public int Slots { get; set; }
+
+        public TrainingType Type { get; set; }
+
+        public Status TrainingStatus { get; set; }
+
+        public DifficultyLevel DifficultyLevel { get; set; }
+
+        public string Comentariu { get; set; }
+
+    }
+}
