@@ -2,7 +2,7 @@
 
 namespace FitZone.ScheduleService.DTOs
 {
-    public class UpdateTraining
+    public class UpdateTrainingDTO
     {
         public string TrainingName { get; set; }
 
@@ -16,9 +16,9 @@ namespace FitZone.ScheduleService.DTOs
 
         public int Slots { get; set; }
 
-        public Status TrainingStatus { get; set; }
+        public string TrainingStatus { get; set; }
 
-        public DifficultyLevel DifficultyLevel { get; set; }
+        public string DifficultyLevel { get; set; }
 
         public string Comentariu { get; set; }
     }

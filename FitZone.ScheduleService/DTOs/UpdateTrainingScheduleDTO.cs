@@ -2,13 +2,13 @@
 
 namespace FitZone.ScheduleService.DTOs
 {
-    public class UpdateTrainingSchedule
+    public class UpdateTrainingScheduleDTO
     {
 
         public Guid TrainingId { get; set; }
 
         public Guid ClientId { get; set; }
 
-        public TrainingScheduleStatus ScheduleStatus { get; set; }
+        public string ScheduleStatus { get; set; }
     }
 }

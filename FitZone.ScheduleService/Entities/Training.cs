@@ -1,5 +1,7 @@
-﻿using FitZone.ScheduleService.Entities.Enums;
+﻿using FitZone.ScheduleService.DTOs;
+using FitZone.ScheduleService.Entities.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography.X509Certificates;
 
 namespace FitZone.ScheduleService.Entities
@@ -37,5 +39,9 @@ namespace FitZone.ScheduleService.Entities
         public DateTime LastUpdatedAt { get; set; }
 
         public Guid LastUpdatedBy { get; set; }
+
+        [NotMapped]
+
+        public List<TrainingScheduleDTO> ScheduledClients { get; set; }
     }
 }

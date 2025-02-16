@@ -8,6 +8,6 @@ namespace FitZone.ScheduleService.DTOs
 
         public Guid ClientId { get; set; }
 
-        public TrainingScheduleStatus ScheduleStatus { get; set; }
+        public string ScheduleStatus { get; set; }
     }
 }
