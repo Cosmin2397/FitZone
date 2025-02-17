@@ -24,11 +24,12 @@ namespace FitZone.ScheduleService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TrainingDTO>>> GetPeriodTrainings(DateTime startDate, DateTime endDate, Guid gymId, TrainingType type)
+        public async Task<ActionResult<List<TrainingDTO>>> GetPeriodTrainings(DateTime startDate, DateTime endDate, Guid gymId, string type)
         {
             try
             {
-                var trainings = await context.Trainings.Include(x => x.ScheduledClients).Where(z => z.StartDate >= startDate && z.FinishDate <= endDate && z.GymId == gymId && z.Type == type).ToListAsync();
+                var trainingType = Enum.Parse<TrainingType>(type);
+                var trainings = await context.Trainings.Include(x => x.ScheduledClients).Where(z => z.StartDate >= startDate && z.FinishDate <= endDate && z.GymId == gymId && z.Type == trainingType).ToListAsync();
 
                 return mapper.Map<List<TrainingDTO>>(trainings);
             }
@@ -92,7 +93,7 @@ namespace FitZone.ScheduleService.Controllers
             }
         }
 
-        [HttpGet("trainer/{clientId}")]
+        [HttpGet("trainer/{trainerId}")]
         public async Task<ActionResult<List<TrainingDTO>>> GetTrainingsByTrainerId(Guid trainerId)
         {
             try
@@ -215,6 +216,7 @@ namespace FitZone.ScheduleService.Controllers
                             var updateSchedule = mapper.Map<UpdateTrainingScheduleDTO>(schedule);
                             await UpdateSchedule(updateSchedule, schedule.Id);
                         }
+                        return Ok(mapper.Map<TrainingDTO>(training));
                     }
                 }
                 var result = await context.SaveChangesAsync() > 0;
@@ -224,7 +226,8 @@ namespace FitZone.ScheduleService.Controllers
                     return BadRequest("Datele privind antrenamentul nu au putut fi modificate în baza de date!");
                 }
 
-                return CreatedAtAction(nameof(GetTrainingById), new { trainingId }, mapper.Map<TrainingDTO>(training));
+                return Ok(mapper.Map<TrainingDTO>(training));
+
             }
             catch (Exception ex)
             {
@@ -256,7 +259,7 @@ namespace FitZone.ScheduleService.Controllers
                     return BadRequest("Datele privind programarea nu au putut fi modificate în baza de date!");
                 }
 
-                return CreatedAtAction(nameof(GetScheduleById), new { scheduleId }, mapper.Map<TrainingScheduleDTO>(schedule));
+                return Ok(mapper.Map<TrainingScheduleDTO>(schedule));
             }
             catch (Exception ex)
             {
@@ -287,8 +290,8 @@ namespace FitZone.ScheduleService.Controllers
                     foreach (var schedule in schedules)
                     {
                         schedule.ScheduleStatus = TrainingScheduleStatus.TrainingCanceled;
-                        var updateSchedule = mapper.Map<UpdateTrainingScheduleDTO>(schedule);
-                        await UpdateSchedule(updateSchedule, schedule.Id);
+                        schedule.LastUpdatedAt = DateTime.Now;
+                        schedule.LastUpdatedBy = new Guid();
                     }
                 }
                 var result = await context.SaveChangesAsync() > 0;
@@ -306,5 +309,6 @@ namespace FitZone.ScheduleService.Controllers
                 throw;
             }
         }
+
     }
 }

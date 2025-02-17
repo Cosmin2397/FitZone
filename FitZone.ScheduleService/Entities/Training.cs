@@ -40,8 +40,6 @@ namespace FitZone.ScheduleService.Entities
 
         public Guid LastUpdatedBy { get; set; }
 
-        [NotMapped]
-
         public List<TrainingSchedule> ScheduledClients { get; set; }
     }
 }

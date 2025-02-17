@@ -9,12 +9,15 @@ namespace FitZone.ScheduleService.RequestHelpers
     {
         public MappingProfiles()
         {
+
+
             // Mapare Training -> TrainingDTO (include programările)
             CreateMap<Training, TrainingDTO>()
-                .IncludeMembers(x => x.ScheduledClients)
+                .ForMember(dest => dest.ScheduledClients, opt => opt.MapFrom(src => src.ScheduledClients))
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
                 .ForMember(dest => dest.TrainingStatus, opt => opt.MapFrom(src => src.TrainingStatus.ToString()))
                 .ForMember(dest => dest.DifficultyLevel, opt => opt.MapFrom(src => src.DifficultyLevel.ToString()));
+
 
             // Mapare inversă pentru crearea unui Training din DTO
             CreateMap<CreateTrainingDTO, Training>()
@@ -30,13 +33,20 @@ namespace FitZone.ScheduleService.RequestHelpers
             // Mapare TrainingSchedule -> TrainingScheduleDTO
             CreateMap<TrainingSchedule, TrainingScheduleDTO>()
                 .ForMember(dest => dest.ScheduleStatus, opt => opt.MapFrom(src => src.ScheduleStatus.ToString()));
+            CreateMap<TrainingScheduleDTO, TrainingSchedule>();
 
             // Mapare inversă pentru creare programare
             CreateMap<CreateTrainingScheduleDTO, TrainingSchedule>();
 
+            CreateMap<TrainingSchedule, UpdateTrainingScheduleDTO>()
+                .ForMember(dest => dest.ScheduleStatus, opt => opt.MapFrom(src => src.ScheduleStatus.ToString()));
+
+            CreateMap<UpdateTrainingScheduleDTO, TrainingSchedule>()
+                .ForMember(dest => dest.ScheduleStatus, opt => opt.MapFrom(src => Enum.Parse<TrainingScheduleStatus>(src.ScheduleStatus)));
+
             // Mapare TrainingDTO -> Training (opțional, doar dacă ai nevoie să transformi DTO-ul în entitate)
             CreateMap<TrainingDTO, Training>()
-                .IncludeMembers(x => x.ScheduledClients)
+                .ForMember(dest => dest.ScheduledClients, opt => opt.MapFrom(src => src.ScheduledClients)) 
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => Enum.Parse<TrainingType>(src.Type)))
                 .ForMember(dest => dest.TrainingStatus, opt => opt.MapFrom(src => Enum.Parse<Status>(src.TrainingStatus)))
                 .ForMember(dest => dest.DifficultyLevel, opt => opt.MapFrom(src => Enum.Parse<DifficultyLevel>(src.DifficultyLevel)));
