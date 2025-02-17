@@ -3,8 +3,6 @@
     public enum Status
     {
         Created,
-        Full,
-        Canceled,
-        Done
+        Canceled
     }
 }

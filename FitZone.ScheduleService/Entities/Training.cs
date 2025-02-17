@@ -42,6 +42,6 @@ namespace FitZone.ScheduleService.Entities
 
         [NotMapped]
 
-        public List<TrainingScheduleDTO> ScheduledClients { get; set; }
+        public List<TrainingSchedule> ScheduledClients { get; set; }
     }
 }
