@@ -10,7 +10,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.AppHost", "FitZone.AppHost\FitZone.AppHost.csproj", "{768508AC-B5CE-4B26-B38D-7E611E6BBB28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.ServiceDefaults", "FitZone.ServiceDefaults\FitZone.ServiceDefaults.csproj", "{38C3554B-FDC0-B85D-F5C3-56CD7B9B19B5}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.ScheduleService", "FitZone.ScheduleService\FitZone.ScheduleService.csproj", "{1CD68DD9-10D5-4289-B105-D8A121812905}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FitZone.EmployeeManagement", "FitZone.EmployeeManagement", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.EmployeeManagementAPI", "FitZone.EmployeeManagementAPI\FitZone.EmployeeManagementAPI.csproj", "{EB332F71-3BDE-8A5F-A653-09099805FF7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.EmployeeManagement.Domain", "FitZone.EmployeeManagement.Domain\FitZone.EmployeeManagement.Domain.csproj", "{0EFDBA7E-9AE0-4904-A12F-588F6C1691D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.EmployeeManagement.Infrastructure", "FitZone.EmployeeManagement.Infrastructure\FitZone.EmployeeManagement.Infrastructure.csproj", "{1221A935-79FD-4253-B45D-2B7C5EBD10B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.EmployeeManagement.Application", "FitZone.EmployeeManagement.Application\FitZone.EmployeeManagement.Application.csproj", "{68C8C39B-2C11-46C7-91E8-013663FCE64C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +45,22 @@ Global
 		{1CD68DD9-10D5-4289-B105-D8A121812905}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CD68DD9-10D5-4289-B105-D8A121812905}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CD68DD9-10D5-4289-B105-D8A121812905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB332F71-3BDE-8A5F-A653-09099805FF7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB332F71-3BDE-8A5F-A653-09099805FF7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB332F71-3BDE-8A5F-A653-09099805FF7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB332F71-3BDE-8A5F-A653-09099805FF7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EFDBA7E-9AE0-4904-A12F-588F6C1691D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFDBA7E-9AE0-4904-A12F-588F6C1691D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EFDBA7E-9AE0-4904-A12F-588F6C1691D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EFDBA7E-9AE0-4904-A12F-588F6C1691D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1221A935-79FD-4253-B45D-2B7C5EBD10B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1221A935-79FD-4253-B45D-2B7C5EBD10B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1221A935-79FD-4253-B45D-2B7C5EBD10B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1221A935-79FD-4253-B45D-2B7C5EBD10B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68C8C39B-2C11-46C7-91E8-013663FCE64C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68C8C39B-2C11-46C7-91E8-013663FCE64C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68C8C39B-2C11-46C7-91E8-013663FCE64C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68C8C39B-2C11-46C7-91E8-013663FCE64C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +68,11 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D99896DD-D217-4574-BF9C-8D9D0E30BB1F} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
 		{1CD68DD9-10D5-4289-B105-D8A121812905} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
+		{EB332F71-3BDE-8A5F-A653-09099805FF7F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{0EFDBA7E-9AE0-4904-A12F-588F6C1691D8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{1221A935-79FD-4253-B45D-2B7C5EBD10B7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{68C8C39B-2C11-46C7-91E8-013663FCE64C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF9FFD14-ADB0-47BD-9B0D-27BEB58DEA7D}

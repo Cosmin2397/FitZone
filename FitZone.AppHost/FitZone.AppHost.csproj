@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FitZone.EmployeeManagementAPI\FitZone.EmployeeManagementAPI.csproj" />
     <ProjectReference Include="..\FitZone.GymsManagement\FitZone.GymsManagement.csproj" />
     <ProjectReference Include="..\FitZone.ScheduleService\FitZone.ScheduleService.csproj" />
   </ItemGroup>
