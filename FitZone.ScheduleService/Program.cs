@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -15,6 +17,8 @@ builder.Services.AddDbContextPool<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
