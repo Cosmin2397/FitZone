@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FitZone.EmployeeManagement.Application\FitZone.EmployeeManagement.Application.csproj" />
+    <ProjectReference Include="..\FitZone.EmployeeManagement.Infrastructure\FitZone.EmployeeManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\FitZone.ServiceDefaults\FitZone.ServiceDefaults.csproj" />
   </ItemGroup>
 

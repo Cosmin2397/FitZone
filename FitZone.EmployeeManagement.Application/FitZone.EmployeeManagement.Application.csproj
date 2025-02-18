@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FitZone.EmployeeManagement.Domain\FitZone.EmployeeManagement.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
