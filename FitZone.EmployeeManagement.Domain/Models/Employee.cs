@@ -17,9 +17,9 @@ namespace FitZone.EmployeeManagement.Domain.Models
 
         public IReadOnlyList<EmployeeContract> EmployeeContracts => _empoyeeContracts.AsReadOnly();
 
-        public GymId GymId { get; private set; }
+        public Guid GymId { get; private set; }
 
-        public RoleId RoleId { get; private set; }
+        public Guid RoleId { get; private set; }
 
         public EmployeeStatus Status { get; private set; }
 
@@ -30,7 +30,7 @@ namespace FitZone.EmployeeManagement.Domain.Models
         public DateTime Birthday { get; private set; }
 
 
-        public static Employee Create(EmployeeId id, GymId gymId,RoleId roleId,  FullName fullName, PhoneNumber phoneNumber, DateTime birthday)
+        public static Employee Create(EmployeeId id, Guid gymId, Guid roleId,  FullName fullName, PhoneNumber phoneNumber, DateTime birthday)
         {
             var employee = new Employee
             {
@@ -46,7 +46,7 @@ namespace FitZone.EmployeeManagement.Domain.Models
             return employee;
         }
 
-        public void Update(EmployeeId id, GymId gymId, RoleId roleId, EmployeeStatus status, FullName fullName, PhoneNumber phoneNumber, DateTime birthday)
+        public void Update(EmployeeId id, Guid gymId, Guid roleId, EmployeeStatus status, FullName fullName, PhoneNumber phoneNumber, DateTime birthday)
         {
             RoleId = roleId;
             Status = status;

@@ -1,3 +1,6 @@
+using FitZone.EmployeeManagement.Infrastructure;
+using FitZone.EmployeeManagementAPI;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -8,8 +11,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+// Add services to the container.
+builder.Services.AddInfrastructureServices(builder.Configuration).AddApiServices(builder.Configuration);
 var app = builder.Build();
+
 
 app.MapDefaultEndpoints();
 
@@ -25,5 +30,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Configure the HTTP request pipeline.
+app.UseApiServices();
+
+
 
 app.Run();
