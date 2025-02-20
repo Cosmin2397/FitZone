@@ -1,5 +1,6 @@
 using FitZone.EmployeeManagement.Infrastructure;
 using FitZone.EmployeeManagementAPI;
+using FitZone.EmployeeManagement.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // Add services to the container.
-builder.Services.AddInfrastructureServices(builder.Configuration).AddApiServices(builder.Configuration);
+builder.Services.AddApplicationServices().AddInfrastructureServices(builder.Configuration).AddApiServices(builder.Configuration);
 var app = builder.Build();
 
 
