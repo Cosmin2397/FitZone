@@ -17,4 +17,5 @@ namespace FitZone.EmployeeManagement.Application
             return services;
         }
     }
+
 }

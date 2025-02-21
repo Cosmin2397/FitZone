@@ -13,7 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // Add services to the container.
-builder.Services.AddApplicationServices().AddInfrastructureServices(builder.Configuration).AddApiServices(builder.Configuration);
+builder.Services
+    .AddApplicationServices(builder.Configuration)
+    .AddInfrastructureServices(builder.Configuration)
+    .AddApiServices(builder.Configuration);
 var app = builder.Build();
 
 

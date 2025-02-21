@@ -1,4 +1,5 @@
-﻿using FitZone.EmployeeManagement.Domain.Models;
+﻿using FitZone.EmployeeManagement.Application.Data;
+using FitZone.EmployeeManagement.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FitZone.EmployeeManagement.Infrastructure
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext: DbContext, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
        : base(options) { }

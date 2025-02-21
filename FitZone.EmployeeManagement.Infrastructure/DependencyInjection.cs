@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using FitZone.EmployeeManagement.Infrastructure.Data.Interceptors;
+using FitZone.EmployeeManagement.Application.Data;
 
 namespace FitZone.EmployeeManagement.Infrastructure
 {
@@ -23,7 +24,7 @@ namespace FitZone.EmployeeManagement.Infrastructure
                 options.UseSqlServer(connectionString);
             });
 
-
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             return services;
         }
     }
