@@ -46,13 +46,18 @@ namespace FitZone.EmployeeManagement.Domain.Models
             return employee;
         }
 
-        public void Update(EmployeeId id, Guid gymId, Guid roleId, EmployeeStatus status, FullName fullName, PhoneNumber phoneNumber, DateTime birthday)
+        public void Update(Guid gymId, Guid roleId, FullName fullName, PhoneNumber phoneNumber, DateTime birthday)
         {
             RoleId = roleId;
-            Status = status;
             FullName = fullName;
             PhoneNumber = phoneNumber;
             Birthday = birthday;
+            AddDomainEvent(new EmployeeUpdatedEvent(this));
+        }
+
+        public void UpdateStatus(EmployeeStatus status)
+        {
+            Status = status;
             AddDomainEvent(new EmployeeUpdatedEvent(this));
         }
 
@@ -72,5 +77,6 @@ namespace FitZone.EmployeeManagement.Domain.Models
                 contract.EndDate = DateTime.Now;
             }
         }
+
     }
 }

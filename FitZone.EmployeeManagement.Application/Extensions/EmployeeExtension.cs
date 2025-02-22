@@ -38,6 +38,7 @@ namespace FitZone.EmployeeManagement.Application.Extensions
                 birthday: employee.Birthday,
                 status: employee.Status,
                 employeeContracts: employee.EmployeeContracts.Select(contract => new EmployeeContractDto(
+                    employeeContractId: contract.Id.Value,
                     employeeId: contract.EmployeeId.Value,
                     startDate: contract.StartDate,
                     endDate: contract.EndDate,

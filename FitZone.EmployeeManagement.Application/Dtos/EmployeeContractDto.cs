@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace FitZone.EmployeeManagement.Application.Dtos
 {
-    public record EmployeeContractDto(Guid employeeId, DateTime startDate, DateTime endDate, decimal monthlyPayment);
+    public record EmployeeContractDto(Guid employeeContractId, Guid employeeId, DateTime startDate, DateTime endDate, decimal monthlyPayment);
 }

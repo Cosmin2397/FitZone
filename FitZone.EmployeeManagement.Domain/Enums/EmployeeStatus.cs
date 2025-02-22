@@ -9,7 +9,6 @@ namespace FitZone.EmployeeManagement.Domain.Enums
     public enum EmployeeStatus
     {
         Active,
-        Suspended,
         Inactive
     }
 }
