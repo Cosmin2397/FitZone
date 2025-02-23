@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.EmployeeManagement.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.EmployeeManagement.Application", "FitZone.EmployeeManagement.Application\FitZone.EmployeeManagement.Application.csproj", "{68C8C39B-2C11-46C7-91E8-013663FCE64C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.SubscriptionService", "FitZone.SubscriptionService\FitZone.SubscriptionService.csproj", "{1B97B077-54C7-6E28-8A54-5BF1570DD1FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{68C8C39B-2C11-46C7-91E8-013663FCE64C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68C8C39B-2C11-46C7-91E8-013663FCE64C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68C8C39B-2C11-46C7-91E8-013663FCE64C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B97B077-54C7-6E28-8A54-5BF1570DD1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B97B077-54C7-6E28-8A54-5BF1570DD1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B97B077-54C7-6E28-8A54-5BF1570DD1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B97B077-54C7-6E28-8A54-5BF1570DD1FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{0EFDBA7E-9AE0-4904-A12F-588F6C1691D8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{1221A935-79FD-4253-B45D-2B7C5EBD10B7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{68C8C39B-2C11-46C7-91E8-013663FCE64C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{1B97B077-54C7-6E28-8A54-5BF1570DD1FD} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF9FFD14-ADB0-47BD-9B0D-27BEB58DEA7D}
