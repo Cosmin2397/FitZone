@@ -4,4 +4,6 @@ builder.AddProject<Projects.FitZone_GymsManagement>("fitzone-gymsmanagement");
 
 builder.AddProject<Projects.FitZone_ScheduleService>("fitzone-scheduleservice");
 
+builder.AddProject<Projects.FitZone_EmployeeManagementAPI>("fitzone-employeemanagementapi");
+
 builder.Build().Run();
