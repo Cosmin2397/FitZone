@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace FitZone.EmployeeManagement.Application.Employees.Queries.GetEmployees
 {
-    public record GetEmployeesQuery(PaginationRequest PaginationRequest)
+    public record GetEmployeesQuery()
     : IQuery<GetEmployeesResult>;
 
-    public record GetEmployeesResult(PaginatedResult<EmployeeDto> Employees);
+    public record GetEmployeesResult(List<EmployeeDto> Employees);
 }

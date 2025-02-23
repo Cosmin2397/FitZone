@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace FitZone.EmployeeManagement.Application.Dtos
 {
-    public record ChangeEmployeeStatusDTO(EmployeeId id,  EmployeeStatus status);
+    public record ChangeEmployeeStatusDTO(Guid id,  string status);
 }

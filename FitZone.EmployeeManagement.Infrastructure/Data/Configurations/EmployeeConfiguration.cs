@@ -19,7 +19,9 @@ namespace FitZone.EmployeeManagement.Infrastructure.Data.Configurations
             builder.Property(c => c.Id).HasConversion(
                 employeeId => employeeId.Value,
                 dbId => EmployeeId.Of(dbId));
-
+            builder
+            .Property(e => e.Id)
+            .ValueGeneratedOnAdd();
             builder.HasMany(o => o.EmployeeContracts)
                 .WithOne()
                 .HasForeignKey(oi => oi.EmployeeId);

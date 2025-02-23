@@ -17,26 +17,27 @@ namespace FitZone.EmployeeManagement.Application.Employees.Queries.GetEmployees
     {
         public async Task<GetEmployeesResult> Handle(GetEmployeesQuery query, CancellationToken cancellationToken)
         {
-            // get Employees with pagination
+            // get Employees with 
             // return result
 
-            var pageIndex = query.PaginationRequest.PageIndex;
-            var pageSize = query.PaginationRequest.PageSize;
-
-            var totalCount = await dbContext.Employees.LongCountAsync(cancellationToken);
-
             var Employees = await dbContext.Employees
-                           .Include(o => o.EmployeeContracts)
-                           .OrderBy(o => o.FullName.FirstName)
-                           .Skip(pageSize * pageIndex)
-                           .Take(pageSize)
-                           .ToListAsync(cancellationToken);
+                                    .OrderBy(o => o.FullName.FirstName)
+                                    .ToListAsync(cancellationToken)
+                                    .ConfigureAwait(false);
 
+            if (Employees != null && Employees.Count > 0)
+            {
+                foreach (var employee in Employees)
+                {
+                    var contracts = await dbContext.EmployeesContracts.Where(e => e.EmployeeId == employee.Id).ToListAsync();
+                    if (contracts != null && contracts.Count > 0)
+                    {
+                        employee.SetCotracts(contracts);
+                    }
+                }
+            }
             return new GetEmployeesResult(
-                new PaginatedResult<EmployeeDto>(
-                    pageIndex,
-                    pageSize,
-                    totalCount,
+                new List<EmployeeDto>(
                     Employees.ToEmployeeDtoList()));
         }
     }

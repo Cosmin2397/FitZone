@@ -6,6 +6,7 @@ using FitZone.EmployeeManagement.Domain.Models;
 using FitZone.EmployeeManagement.Domain.ValueObjects;
 using FluentValidation;
 using Marten.Linq.Parsing.Operators;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,18 @@ namespace FitZone.EmployeeManagement.Application.Employees.Commands.UpdateEmploy
             //save to database
             //return result
 
-            var employeeId = EmployeeId.Of(command.Employee.id.Value);
+            var employeeId = EmployeeId.Of(command.Employee.id);
             var employee = await dbContext.Employees
                 .FindAsync([employeeId], cancellationToken: cancellationToken);
+            var contracts = await dbContext.EmployeesContracts.Where(c => c.EmployeeId == employeeId).ToListAsync();
+            if (contracts != null)
+            {
+                employee.SetCotracts(contracts);
+            }
 
             if (employee is null)
             {
-                throw new EmployeeNotFoundException(command.Employee.id.Value);
+                throw new EmployeeNotFoundException(command.Employee.id);
             }
 
             UpdateEmployeeWithNewValues(employee, command.Employee);

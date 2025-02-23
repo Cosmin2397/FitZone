@@ -23,6 +23,7 @@ namespace FitZone.EmployeeManagement.Infrastructure
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(builder);
+
         }
     }
 }

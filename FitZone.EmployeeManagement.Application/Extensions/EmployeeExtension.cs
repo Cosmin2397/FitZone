@@ -1,4 +1,5 @@
 ﻿using FitZone.EmployeeManagement.Application.Dtos;
+using FitZone.EmployeeManagement.Domain.Enums;
 using FitZone.EmployeeManagement.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace FitZone.EmployeeManagement.Application.Extensions
         private static EmployeeDto DtoFromEmployee(Employee employee)
         {
             return new EmployeeDto(
-                id: employee.Id,
+                id: employee.Id.Value,
                 gymId: employee.GymId,
                 roleId: employee.RoleId,
                 fullName: new FullNameDto(
@@ -36,7 +37,7 @@ namespace FitZone.EmployeeManagement.Application.Extensions
                     employee.PhoneNumber.RemainingLetters
                 ),
                 birthday: employee.Birthday,
-                status: employee.Status,
+                status: employee.Status.ToString(),
                 employeeContracts: employee.EmployeeContracts.Select(contract => new EmployeeContractDto(
                     employeeContractId: contract.Id.Value,
                     employeeId: contract.EmployeeId.Value,

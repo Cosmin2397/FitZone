@@ -3,6 +3,7 @@ using FitZone.EmployeeManagement.Application.Data;
 using FitZone.EmployeeManagement.Application.Dtos;
 using FitZone.EmployeeManagement.Application.Employees.Commands.UpdateEmployee;
 using FitZone.EmployeeManagement.Application.Exceptions;
+using FitZone.EmployeeManagement.Domain.Enums;
 using FitZone.EmployeeManagement.Domain.Models;
 using FitZone.EmployeeManagement.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -23,14 +24,18 @@ namespace FitZone.EmployeeManagement.Application.Employees.Commands.ChangeEmploy
             //save to database
             //return result
 
-            var employeeId = EmployeeId.Of(command.Employee.id.Value);
-            var employee = await dbContext.Employees
-                .FindAsync([employeeId], cancellationToken: cancellationToken);
+            var employeeId = EmployeeId.Of(command.Employee.id);
+            var employee = await dbContext.Employees.FirstOrDefaultAsync(i => i.Id == employeeId);
 
 
             if (employee is null)
             {
-                throw new EmployeeNotFoundException(command.Employee.id.Value);
+                throw new EmployeeNotFoundException(command.Employee.id);
+            }
+            var dbContracts = await dbContext.EmployeesContracts.Where(c => c.EmployeeId == employeeId).ToListAsync();
+            if (dbContracts != null)
+            {
+                employee.SetCotracts(dbContracts);
             }
 
             var contracts = employee.EmployeeContracts.Where(d=> d.EndDate.Date > DateTime.Now.Date);
@@ -46,7 +51,7 @@ namespace FitZone.EmployeeManagement.Application.Employees.Commands.ChangeEmploy
         public void ChangeEmployeeStatusWithNewValue(Employee employee, IEnumerable<EmployeeContract> contracts, ChangeEmployeeStatusDTO employeeDto)
         {
 
-            employee.UpdateStatus(employeeDto.status);
+            employee.UpdateStatus(Enum.Parse<EmployeeStatus>(employeeDto.status));
 
             if(employee.EmployeeContracts != null && employee.EmployeeContracts.Count > 0)
             {

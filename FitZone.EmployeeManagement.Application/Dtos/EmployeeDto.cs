@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace FitZone.EmployeeManagement.Application.Dtos
 {
-    public record EmployeeDto(EmployeeId id, Guid gymId, Guid roleId, FullNameDto fullName, PhoneNumberDto phoneNumber, DateTime birthday,EmployeeStatus status,  List<EmployeeContractDto> employeeContracts);
+    public record EmployeeDto(Guid id, Guid gymId, Guid roleId, FullNameDto fullName, PhoneNumberDto phoneNumber, DateTime birthday,string status,  List<EmployeeContractDto> employeeContracts);
 }

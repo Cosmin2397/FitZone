@@ -16,6 +16,9 @@ namespace FitZone.EmployeeManagement.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<EmployeeContract> builder)
         {
             builder.HasKey(c => c.Id);
+            builder
+            .Property(ec => ec.Id)
+            .ValueGeneratedOnAdd();
             builder.Property(c => c.Id).HasConversion(
                 employeeContractId => employeeContractId.Value,
                 dbId => EmployeeContractId.Of(dbId));

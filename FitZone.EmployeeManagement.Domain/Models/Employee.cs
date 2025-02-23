@@ -13,7 +13,7 @@ namespace FitZone.EmployeeManagement.Domain.Models
 {
     public class Employee : Aggregate<EmployeeId>
     {
-        public readonly List<EmployeeContract> _empoyeeContracts = new();
+        public List<EmployeeContract> _empoyeeContracts = new();
 
         public IReadOnlyList<EmployeeContract> EmployeeContracts => _empoyeeContracts.AsReadOnly();
 
@@ -67,6 +67,11 @@ namespace FitZone.EmployeeManagement.Domain.Models
 
             var employeeContract = new EmployeeContract(Id, startDate, DateTime.MaxValue, monthlyPayment);
             _empoyeeContracts.Add(employeeContract);
+        }
+
+        public void SetCotracts(List<EmployeeContract> contracts)
+        {
+            _empoyeeContracts = contracts;
         }
 
         public void Remove(EmployeeContractId contractId)

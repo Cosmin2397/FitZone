@@ -20,14 +20,21 @@ namespace FitZone.EmployeeManagement.Application.Employees.Queries.GetEmployeeBy
             // get Employees by gym id
             // return result
 
-            var totalCount = await dbContext.Employees.LongCountAsync(cancellationToken);
 
             var Employees = await dbContext.Employees
-                           .Include(o => o.EmployeeContracts)
-                           .OrderBy(o => o.FullName.FirstName)
                            .Where(g => g.GymId == query.gymId)
                            .ToListAsync(cancellationToken);
-
+            if (Employees != null && Employees.Count > 0)
+            {
+                foreach (var employee in Employees)
+                {
+                    var contracts = await dbContext.EmployeesContracts.Where(e => e.EmployeeId == employee.Id).ToListAsync();
+                    if (contracts != null && contracts.Count > 0)
+                    {
+                        employee.SetCotracts(contracts);
+                    }
+                }
+            }
             return new GetEmployeesByGymIdResult(
                 [.. Employees.ToEmployeeDtoList()]);
         }
