@@ -24,8 +24,9 @@ namespace FitZone.SubscriptionService.Shared.Domain.Entities
 
         public DateTime EndDate { get; set; }
 
-        [NotMapped]
-        public List<Payment> SubscriptionPayments { get; set; }
+        public List<Payment>? SubscriptionPayments { get; set; }
+
+        public PersonalTrainerSubscription? PersonalTrainerSubscription { get; set; }
 
 
     }
