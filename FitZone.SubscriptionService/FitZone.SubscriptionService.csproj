@@ -21,10 +21,4 @@
     <ProjectReference Include="..\FitZone.ServiceDefaults\FitZone.ServiceDefaults.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Payment\GetGymPayments\" />
-    <Folder Include="Features\Payment\GetPaymentsBySubscriptionID\" />
-    <Folder Include="Features\Payment\GetPaymentByID\" />
-  </ItemGroup>
-
 </Project>
