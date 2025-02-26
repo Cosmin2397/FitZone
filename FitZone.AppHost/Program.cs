@@ -8,4 +8,6 @@ builder.AddProject<Projects.FitZone_EmployeeManagementAPI>("fitzone-employeemana
 
 builder.AddProject<Projects.FitZone_SubscriptionService>("fitzone-subscriptionservice");
 
+builder.AddProject<Projects.FitZone_CalorieTrackerService>("fitzone-calorietrackerservice");
+
 builder.Build().Run();
