@@ -1,6 +1,23 @@
+﻿using FitZone.CalorieTrackerService.Configurations;
+using FitZone.CalorieTrackerService.Repositories;
+using FitZone.CalorieTrackerService.Repositories.Interfaces;
+using FitZone.CalorieTrackerService.Services;
+using FitZone.CalorieTrackerService.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+builder.Services.Configure<NutritionixSettings>(builder.Configuration.GetSection("NutritionixSettings"));
+
+//  Configurare MongoDB
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+builder.Services.AddScoped<INutritionixRepository, NutritionixRepository>();
+builder.Services.AddScoped<IMealRepository, MealRepository>();
+builder.Services.AddScoped<IMealService, MealService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
+//  Configurare Redis
+builder.Services.AddSingleton<CacheService>();
+
 
 // Add services to the container.
 
