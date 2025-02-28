@@ -8,7 +8,9 @@ namespace FitZone.CalorieTrackerService.Repositories.Interfaces
 
     public interface INutritionixRepository
     {
-        Task<List<FoodItem>> GetFoodsByName(string food);
+        Task<FoodItem> GetFoodByName(string food);
+
+        FoodItem UpdateFoodSize(FoodItem item, double newPortionsSize);
     }
 
 }
