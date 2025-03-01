@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 namespace FitZone.CalorieTrackerService.Services
 {
 
-
-    public class CacheService: ICacheService
+    public class CacheService : ICacheService
     {
         private readonly IDatabase _cacheDb;
 
-        public CacheService(IConfiguration config)
+        public CacheService(IConnectionMultiplexer connectionMultiplexer)
         {
-            var redis = ConnectionMultiplexer.Connect($"{config["RedisSettings:Host"]}:{config["RedisSettings:Port"]}");
-            _cacheDb = redis.GetDatabase();
+            _cacheDb = connectionMultiplexer.GetDatabase();
         }
 
         public async Task SetCacheAsync(string key, object value, TimeSpan expiration)
@@ -35,5 +33,6 @@ namespace FitZone.CalorieTrackerService.Services
             await _cacheDb.KeyDeleteAsync(key);
         }
     }
+
 
 }

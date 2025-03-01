@@ -7,10 +7,10 @@ namespace FitZone.CalorieTrackerService.Models
     public class DailyClientMeals
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonRepresentation(BsonType.String)]
         public Guid Id { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonRepresentation(BsonType.String)]
         public Guid ClientId { get; set; }
 
         public DateTime Date { get; set; }

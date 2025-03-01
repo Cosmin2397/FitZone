@@ -22,8 +22,4 @@
     <ProjectReference Include="..\FitZone.ServiceDefaults\FitZone.ServiceDefaults.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>

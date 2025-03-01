@@ -1,5 +1,10 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+var redis = builder.AddRedis("redis");
+
+var api = builder.AddProject<Projects.FitZone_CalorieTrackerService>("calorieTrackerApi")
+                 .WithReference(redis);
+
 builder.AddProject<Projects.FitZone_GymsManagement>("fitzone-gymsmanagement");
 
 builder.AddProject<Projects.FitZone_ScheduleService>("fitzone-scheduleservice");

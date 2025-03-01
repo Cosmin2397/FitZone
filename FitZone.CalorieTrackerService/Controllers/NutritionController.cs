@@ -1,5 +1,6 @@
 ﻿using FitZone.CalorieTrackerService.Models;
 using FitZone.CalorieTrackerService.Repositories.Interfaces;
+using FitZone.CalorieTrackerService.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +10,17 @@ namespace FitZone.CalorieTrackerService.Controllers
     [ApiController]
     public class NutritionController : ControllerBase
     {
-        private readonly INutritionixRepository _nutritionixRepository;
+        private readonly INutritionixService _nutritionixService;
 
-        public NutritionController(INutritionixRepository nutritionixRepository)
+        public NutritionController(INutritionixService nutritionixService)
         {
-            _nutritionixRepository = nutritionixRepository;
+            _nutritionixService = nutritionixService;
         }
 
         [HttpGet("{food}")]
         public async Task<IActionResult> GetFoodNutrition(string food)
         {
-            var nutritionData = await _nutritionixRepository.GetFoodByName(food);
+            var nutritionData = await _nutritionixService.GetFoodByName(food);
             if (nutritionData != null)
             {
                 return Ok(nutritionData);
@@ -31,7 +32,7 @@ namespace FitZone.CalorieTrackerService.Controllers
         [HttpPut("/updatequantity/{newQuantity}")]
         public IActionResult GetFoodNutrition(FoodItem food, double newQuantity)
         {
-            var nutritionData =  _nutritionixRepository.UpdateFoodSize(food, newQuantity);
+            var nutritionData = _nutritionixService.UpdateFoodSize(food, newQuantity);
             if (nutritionData != null)
             {
                 return Ok(nutritionData);
