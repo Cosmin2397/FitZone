@@ -18,7 +18,7 @@ namespace FitZone.CalorieTrackerService.Controllers
         }
 
         [HttpGet("{date}/{clientId}")]
-        public async Task<IActionResult> GetFoodNutrition(DateTime date, Guid clientId)
+        public async Task<IActionResult> GetFoodNutrition(string date, Guid clientId)
         {
             var meals = await _mealService.GetMealsAsync(clientId,date);
             if (meals != null)
@@ -29,8 +29,8 @@ namespace FitZone.CalorieTrackerService.Controllers
             return NotFound();
         }
 
-        [HttpPut("/updateMeal/{newQuantity}")]
-        public async Task<IActionResult> GetFoodNutrition(DailyClientMeals meal)
+        [HttpPut("/updateMeal")]
+        public async Task<IActionResult> UpdateDailyLog(DailyClientMeals meal)
         {
             await _mealService.UpsertMealLogAsync(meal);
             var updatedMeals = await _mealService.GetMealsAsync(meal.ClientId, meal.Date);
@@ -43,7 +43,7 @@ namespace FitZone.CalorieTrackerService.Controllers
         }
 
         [HttpDelete("/deleteMeal/{clientId}/{date}")]
-        public async Task<IActionResult> GetFoodNutrition(Guid clientId, DateTime date)
+        public async Task<IActionResult> DeleteDailyLog(Guid clientId, string date)
         {
             await _mealService.DeleteMealLogAsync(clientId,date);
             var deletedMeals = await _mealService.GetMealsAsync(clientId, date);

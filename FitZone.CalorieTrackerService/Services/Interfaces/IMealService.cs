@@ -4,10 +4,10 @@ namespace FitZone.CalorieTrackerService.Services.Interfaces
 {
     public interface IMealService
     {
-        Task<DailyClientMeals> GetMealsAsync(Guid clientId, DateTime date);
+        Task<DailyClientMeals> GetMealsAsync(Guid clientId, string  date);
 
         Task UpsertMealLogAsync(DailyClientMeals mealLog);
 
-        Task DeleteMealLogAsync(Guid clientId, DateTime date);
+        Task DeleteMealLogAsync(Guid clientId, string date);
     }
 }

@@ -3,7 +3,6 @@ using FitZone.CalorieTrackerService.Repositories;
 using FitZone.CalorieTrackerService.Repositories.Interfaces;
 using FitZone.CalorieTrackerService.Services;
 using FitZone.CalorieTrackerService.Services.Interfaces;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +12,8 @@ builder.Services.Configure<NutritionixSettings>(builder.Configuration.GetSection
 //  Configurare MongoDB
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 // Configurarea pentru Redis
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection"))
-);
 
+builder.AddRedisDistributedCache("redis");
 
 builder.Services.AddScoped<INutritionixRepository, NutritionixRepository>();
 builder.Services.AddScoped<IMealRepository, MealRepository>();

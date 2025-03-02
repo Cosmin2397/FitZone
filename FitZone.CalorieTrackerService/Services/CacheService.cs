@@ -1,4 +1,5 @@
 ﻿using FitZone.CalorieTrackerService.Services.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System;
 using System.Text.Json;
@@ -9,28 +10,33 @@ namespace FitZone.CalorieTrackerService.Services
 
     public class CacheService : ICacheService
     {
-        private readonly IDatabase _cacheDb;
+        private readonly IDistributedCache _distributedCache;
 
-        public CacheService(IConnectionMultiplexer connectionMultiplexer)
+        public CacheService(IDistributedCache distributedCache)
         {
-            _cacheDb = connectionMultiplexer.GetDatabase();
+            _distributedCache = distributedCache;
         }
 
         public async Task SetCacheAsync(string key, object value, TimeSpan expiration)
         {
             var jsonData = JsonSerializer.Serialize(value);
-            await _cacheDb.StringSetAsync(key, jsonData, expiration);
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = expiration
+            };
+
+            await _distributedCache.SetStringAsync(key, jsonData, options);
         }
 
         public async Task<T> GetCacheAsync<T>(string key)
         {
-            var data = await _cacheDb.StringGetAsync(key);
-            return data.IsNullOrEmpty ? default : JsonSerializer.Deserialize<T>(data);
+            var data = await _distributedCache.GetStringAsync(key);
+            return data == null ? default : JsonSerializer.Deserialize<T>(data);
         }
 
         public async Task DeleteCacheAsync(string key)
         {
-            await _cacheDb.KeyDeleteAsync(key);
+            await _distributedCache.RemoveAsync(key);
         }
     }
 

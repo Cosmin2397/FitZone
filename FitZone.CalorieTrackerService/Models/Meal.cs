@@ -1,12 +1,15 @@
 ﻿using FitZone.CalorieTrackerService.Models.Enum;
+using System.Text.Json.Serialization;
 
 namespace FitZone.CalorieTrackerService.Models
 {
     public class Meal
     {
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public MealType Name { get; set; }
 
-        public List<FoodItem> FoodItems = new List<FoodItem>();
+        public List<FoodItem> FoodItems { get; set; } = new List<FoodItem>();
+
 
         public Meal()
         {

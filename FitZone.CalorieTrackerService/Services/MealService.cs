@@ -2,7 +2,9 @@
 using FitZone.CalorieTrackerService.Repositories;
 using FitZone.CalorieTrackerService.Repositories.Interfaces;
 using FitZone.CalorieTrackerService.Services.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FitZone.CalorieTrackerService.Services
@@ -19,18 +21,16 @@ namespace FitZone.CalorieTrackerService.Services
             _cacheService = cacheService;
         }
 
-        public async Task<DailyClientMeals> GetMealsAsync(Guid clientId, DateTime date)
+        public async Task<DailyClientMeals> GetMealsAsync(Guid clientId, string date)
         {
-            string cacheKey = $"meals_{clientId}_{date:yyyy-MM-dd}";
+            string cacheKey = $"meals_{clientId}_{date}";
 
-            //Verifică cache-ul Redis înainte de a accesa MongoDB
             var cachedMeals = await _cacheService.GetCacheAsync<DailyClientMeals>(cacheKey);
             if (cachedMeals != null)
             {
                 return cachedMeals;
             }
 
-            // Caută în MongoDB dacă nu este în cache
             var meals = await _mealRepository.GetMealsByClientAndDateAsync(clientId, date);
             if (meals != null)
             {
@@ -44,19 +44,18 @@ namespace FitZone.CalorieTrackerService.Services
         {
             await _mealRepository.UpsertMealLogAsync(mealLog);
 
-            // Șterge cache-ul pentru a ne asigura că frontend-ul primește date actualizate
-            string cacheKey = $"meals_{mealLog.ClientId}_{mealLog.Date:yyyy-MM-dd}";
+            // Șterge cache-ul pentru date actualizate
+            string cacheKey = $"meals_{mealLog.ClientId}_{mealLog.Date}";
             await _cacheService.DeleteCacheAsync(cacheKey);
         }
 
-        public async Task DeleteMealLogAsync(Guid clientId, DateTime date)
+        public async Task DeleteMealLogAsync(Guid clientId, string date)
         {
             await _mealRepository.DeleteMealLogAsync(clientId, date);
 
-            // Ștergem cache-ul
-            string cacheKey = $"meals_{clientId}_{date:yyyy-MM-dd}";
+            // Șterge cache-ul pentru date șterse
+            string cacheKey = $"meals_{clientId}_{date}";
             await _cacheService.DeleteCacheAsync(cacheKey);
         }
     }
-
 }

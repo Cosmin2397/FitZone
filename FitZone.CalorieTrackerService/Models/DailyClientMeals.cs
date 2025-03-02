@@ -1,19 +1,20 @@
 ﻿using FitZone.CalorieTrackerService.Models.Enum;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace FitZone.CalorieTrackerService.Models
 {
     public class DailyClientMeals
     {
         [BsonId]
-        [BsonRepresentation(BsonType.String)]
-        public Guid Id { get; set; }
+        public ObjectId Id { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public Guid ClientId { get; set; }
 
-        public DateTime Date { get; set; }
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$", ErrorMessage = "Data trebuie să fie în formatul dd-MM-yyyy")]
+        public string Date { get; set; }
         public List<Meal> Meals { get; set; } = new List<Meal>();
         public string PtComment { get; set; }
 
@@ -26,7 +27,7 @@ namespace FitZone.CalorieTrackerService.Models
         public DailyClientMeals(Guid clientId)
         {
             ClientId = clientId;
-            Date = DateTime.Now;
+            Date = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
         public void AddFoodToMeal(MealType meal, FoodItem item)
