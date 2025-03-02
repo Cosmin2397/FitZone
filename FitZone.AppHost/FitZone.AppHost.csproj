@@ -13,9 +13,11 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FitZone.CalorieTrackerService\FitZone.CalorieTrackerService.csproj" />
     <ProjectReference Include="..\FitZone.EmployeeManagementAPI\FitZone.EmployeeManagementAPI.csproj" />
     <ProjectReference Include="..\FitZone.GymsManagement\FitZone.GymsManagement.csproj" />
     <ProjectReference Include="..\FitZone.ScheduleService\FitZone.ScheduleService.csproj" />
