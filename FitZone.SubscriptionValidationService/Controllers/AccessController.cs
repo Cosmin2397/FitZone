@@ -9,6 +9,7 @@ using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
 using ZXing.Windows.Compatibility;
+using FitZone.SubscriptionValidationService.Services;
 
 namespace FitZone.SubscriptionValidationService.Controllers
 {
@@ -17,10 +18,14 @@ namespace FitZone.SubscriptionValidationService.Controllers
     public class AccessController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IValidationsService _validationsService;
+        private readonly ISubscriptionValidationService _subscriptionValidationService;
 
-        public AccessController(IHttpClientFactory httpClientFactory)
+        public AccessController(IHttpClientFactory httpClientFactory, IValidationsService validationsService, ISubscriptionValidationService subscriptionValidationService)
         {
             _httpClientFactory = httpClientFactory;
+            _validationsService = validationsService;
+            _subscriptionValidationService = subscriptionValidationService;
         }
 
         [HttpPost("validate-image")]
@@ -42,6 +47,11 @@ namespace FitZone.SubscriptionValidationService.Controllers
 
             if (isValid)
             {
+                var succes = await _validationsService.AddAccess(access);
+                if(!succes)
+                {
+                    Console.WriteLine(succes);
+                }
                 return Ok(new { Message = "Access granted!" });
             }
             else
@@ -54,12 +64,13 @@ namespace FitZone.SubscriptionValidationService.Controllers
         [HttpGet("generate-test-qr")]
         public IActionResult GenerateTestQr()
         {
+            string guid = "3FA85F64-5717-4562-B3FC-2C963F66AFA6";
             // Creeaza obiectul ClientsAccess
             var access = new ClientsAccess
             {
                 Id = Guid.NewGuid(),
                 GymId = Guid.NewGuid(),
-                ClientId = Guid.NewGuid(),
+                ClientId = Guid.Parse(guid),
                 SubscriptionId = Guid.NewGuid(),
                 Role = Role.Client,
                 ValidationType = ValidationType.Entry,
@@ -101,11 +112,11 @@ namespace FitZone.SubscriptionValidationService.Controllers
         }
 
 
-    private async Task<bool> ValidateSubscription(ClientsAccess access)
+        private async Task<bool> ValidateSubscription(ClientsAccess access)
         {
-
-            return false;
+            return await _subscriptionValidationService.ValidateSubscription(access);
         }
+
     }
 
 }
