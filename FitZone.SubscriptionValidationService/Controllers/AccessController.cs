@@ -72,7 +72,7 @@ namespace FitZone.SubscriptionValidationService.Controllers
                 GymId = Guid.NewGuid(),
                 ClientId = Guid.Parse(guid),
                 SubscriptionId = Guid.NewGuid(),
-                Role = Role.Client,
+                Role = Role.Employee,
                 ValidationType = ValidationType.Entry,
                 DataValidare = DateTime.UtcNow
             };

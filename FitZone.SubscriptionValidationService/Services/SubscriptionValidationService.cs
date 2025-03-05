@@ -14,7 +14,7 @@ namespace FitZone.SubscriptionValidationService.Services
 
         public async Task<bool> ValidateSubscription(ClientsAccess access)
         {
-            var request = new SubscriptionRequest { Id = access.ClientId.ToString() };
+            var request = new SubscriptionRequest { Id = access.ClientId.ToString() , Date = access.DataValidare.ToString()};
             var response = await _grpcClient.GetSubscriptionByIdAsync(request);
 
             return response != null &&

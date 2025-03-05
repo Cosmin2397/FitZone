@@ -8,6 +8,7 @@ service SubscriptionGrpc {
 
 message SubscriptionRequest {
     string id = 1;
+    string date = 2;
 }
 
 message PaymentResponse {
