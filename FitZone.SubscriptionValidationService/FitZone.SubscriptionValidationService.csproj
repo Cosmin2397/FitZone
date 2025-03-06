@@ -29,6 +29,12 @@
 		<Protobuf Include="Protos/subscription.proto" GrpcServices="Client" />
 	</ItemGroup>
 	<ItemGroup>
+		<Protobuf Include="Protos/validation.proto" GrpcServices="Server" />
+	</ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="Protos/statistics.proto" GrpcServices="Server" />
+	</ItemGroup>
+	<ItemGroup>
     <ProjectReference Include="..\FitZone.ServiceDefaults\FitZone.ServiceDefaults.csproj" />
   </ItemGroup>
 

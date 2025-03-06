@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "FitZone.SubscriptionService.Protos";
+
+
+message StatisticsRequest {
+    string gymId = 1;
+    string startDate = 2;
+    string endDate = 3;
+    string role = 4;
+}
+
+message StatisticsResponse {
+    string numOfNormalSubscriptions = 1;
+    string numOFPTSubscriptions = 2;
+}
