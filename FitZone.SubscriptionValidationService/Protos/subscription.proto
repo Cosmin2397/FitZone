@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option csharp_namespace = "FitZone.SubscriptionValidationService.Protos";
+
+service SubscriptionGrpc {
+    rpc GetSubscriptionById (SubscriptionRequest) returns (SubscriptionResponse);
+}
+
+message SubscriptionRequest {
+    string id = 1;
+    string date = 2;
+}
+
+message PaymentResponse {
+    string id = 1;
+    string subscriptionId = 2;
+    string status = 3;
+    string type = 4;
+    double amount = 5;
+    string paymentDate = 6;
+}
+
+message SubscriptionResponse {
+    string id = 1;
+    string clientId = 2;
+    string gymId = 3;
+    string subscriptionType = 4;
+    string clientType = 5;
+    string status = 6;
+    string startingDate = 7;
+    string endDate = 8;
+    repeated PaymentResponse payments = 9;
+}

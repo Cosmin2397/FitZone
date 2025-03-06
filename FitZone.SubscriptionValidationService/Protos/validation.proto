@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "FitZone.SubscriptionValidationService.Protos";
+
+
+message ValidationRequest {
+    string gymId = 1;
+    string startDate = 2;
+    string endDate = 3;
+    string role = 4;
+}
+
+message ValidationResponse {
+    string numOfEntries = 1;
+    string numOfExits = 2;
+}

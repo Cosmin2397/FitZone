@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "FitZone.ScheduleService.Protos";
+
+
+message TrainingsRequest {
+    string gymId = 1;
+    string startDate = 2;
+    string endDate = 3;
+}
+
+message TrainingsResponse {
+    string numOfFitnessClasses = 1;
+    string numOfPTTrainings = 2;
+}

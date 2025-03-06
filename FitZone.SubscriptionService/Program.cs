@@ -1,4 +1,6 @@
-﻿using FitZone.SubscriptionService.Features.Subscription.GetSubscriptions;
+﻿using FitZone.SubscriptionService.Features.Subscription.GetSubscriptionById;
+using FitZone.SubscriptionService.Features.Subscription.GetSubscriptions;
+using FitZone.SubscriptionService.gRPC;
 using FitZone.SubscriptionService.Shared.Abstractions;
 using FitZone.SubscriptionService.Shared.Data;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +15,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
+builder.Services.AddGrpc();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContextPool<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 var app = builder.Build();
+
+app.MapGrpcService<SubscriptionGrpcService>();
 
 app.MapDefaultEndpoints();
 
