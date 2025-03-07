@@ -1,0 +1,6 @@
+@FitZone.StatisticsService_HostAddress = http://localhost:5045
+
+GET {{FitZone.StatisticsService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
