@@ -18,7 +18,7 @@ builder.Services.AddGrpcClient<SubscriptionGrpc.SubscriptionGrpcClient>(o =>
 {
     o.Address = new Uri("https://localhost:7278");
 });
-
+builder.Services.AddGrpc();
 builder.Services.AddScoped<ISubscriptionValidationService, SubscriptionValidationService>();
 builder.Services.AddScoped<IValidationsRepository, ValidationsRepository>();
 builder.Services.AddScoped<IValidationsService, ValidationsService>();
@@ -31,7 +31,8 @@ builder.Services.AddDbContextPool<AppDbContext>(options =>
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-
+app.MapGrpcService<SubscriptionValidationService>();
+app.MapGrpcService<ValidationsService>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

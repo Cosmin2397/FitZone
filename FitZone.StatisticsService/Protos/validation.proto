@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "FitZone.SubscriptionValidationService.Protos";
+option csharp_namespace = "FitZone.StatisticsService.Protos";
 
 service FitnessStatsPeriod {
   rpc GetEntriesAndExitsByPeriod (ValidationRequest) returns (ValidationResponse);

@@ -1,4 +1,5 @@
 using FitZone.ScheduleService.Data;
+using FitZone.ScheduleService.gRPC;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-
+app.MapGrpcService<TrainingsService>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
