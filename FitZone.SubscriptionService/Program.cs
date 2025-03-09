@@ -23,7 +23,7 @@ builder.Services.AddDbContextPool<AppDbContext>(options =>
 var app = builder.Build();
 
 app.MapGrpcService<SubscriptionGrpcService>();
-
+app.MapGrpcService<StatisticsService>();
 app.MapDefaultEndpoints();
 
 app.RegisterAllEndpoints();

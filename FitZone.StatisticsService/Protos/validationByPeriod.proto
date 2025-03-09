@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "FitZone.StatisticsService.Protos";
+
+service FitnessStats {
+  rpc GetEntriesAndExits (EntriesRequest) returns (EntriesResponse);
+}
+
+// Request pentru filtrarea după interval
+message EntriesRequest {
+  string startDate = 1; // Format ISO 8601: YYYY-MM-DD HH:mm:ss
+  string endDate = 2;
+  string gymId = 4;
+}
+
+// Răspuns cu numărul de intrări și ieșiri
+message EntriesResponse {
+  repeated EntryStat stats = 1;
+}
+
+message EntryStat {
+  string timePeriod = 1;
+  int32 entries = 2;
+  int32 exits = 3;
+}

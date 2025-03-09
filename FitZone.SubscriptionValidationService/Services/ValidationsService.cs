@@ -1,9 +1,11 @@
 ﻿using FitZone.SubscriptionValidationService.Models;
+using FitZone.SubscriptionValidationService.Protos;
 using FitZone.SubscriptionValidationService.Repositories;
+using Grpc.Core;
 
 namespace FitZone.SubscriptionValidationService.Services
 {
-    public class ValidationsService: IValidationsService
+    public class ValidationsService: FitnessStatsPeriod.FitnessStatsPeriodBase, IValidationsService
     {
         private readonly IValidationsRepository _validationsRepository;
 
@@ -25,6 +27,17 @@ namespace FitZone.SubscriptionValidationService.Services
         public async Task<List<ClientsAccess>> GetEmployeesAccesses(Guid gymId, DateTime startDate, DateTime endDate)
         {
             return await _validationsRepository.GetEmployeesAccesses(gymId, startDate, endDate);
+        }
+
+        public override async Task<ValidationResponse> GetEntriesAndExitsByPeriod(ValidationRequest request, ServerCallContext context)
+        {
+            var stats = await _validationsRepository.GetEntriesAndExitsByPeriodAsync(DateTime.Parse(request.StartDate), DateTime.Parse(request.EndDate), Guid.Parse(request.GymId), request.Role);
+
+            var response = new ValidationResponse();
+            response.NumOfEntries = stats.Entries.ToString();
+            response.NumOfExits = stats.Exits.ToString();
+
+            return response;
         }
     }
 }

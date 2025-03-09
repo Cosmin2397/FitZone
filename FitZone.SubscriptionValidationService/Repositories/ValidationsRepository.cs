@@ -1,4 +1,5 @@
 ﻿using FitZone.SubscriptionValidationService.Data;
+using FitZone.SubscriptionValidationService.DTOs;
 using FitZone.SubscriptionValidationService.Models;
 using FitZone.SubscriptionValidationService.Models.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -81,6 +82,49 @@ namespace FitZone.SubscriptionValidationService.Repositories
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<List<ValidationStatDto>> GetEntriesAndExitsAsync(DateTime startDate, DateTime endDate, Guid gymId)
+        {
+            try
+            {
+                var filtered = await _context.ClientsAccesses.Where(log => log.DataValidare >= startDate && log.DataValidare <= endDate && log.GymId == gymId).ToListAsync();
+
+                var grouped = filtered
+                    .GroupBy(log => log.DataValidare.ToString("yyyy-MM-dd HH:00")) // Grupare pe ore
+                    .OrderBy(g => g.Key)
+                    .Select(g => new ValidationStatDto
+                    {
+                        TimePeriod = g.Key, // Format: "YYYY-MM-DD HH:00"
+                        Entries = g.Count(l => l.ValidationType == ValidationType.Entry),
+                        Exits = g.Count(l => l.ValidationType != ValidationType.Entry)
+                    }).ToList();
+
+                return grouped;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
+        public async Task<ValidationByPeriodDto> GetEntriesAndExitsByPeriodAsync(DateTime startDate, DateTime endDate, Guid gymId, string role)
+        {
+            try
+            {
+                var validations = await _context.ClientsAccesses.Where(log => log.DataValidare >= startDate && log.DataValidare <= endDate && log.GymId == gymId && log.Role == Enum.Parse<Role>(role)).ToListAsync();
+
+                var validationsByPeriod = new ValidationByPeriodDto();
+                validationsByPeriod.Entries = validations.Where(e => e.ValidationType == ValidationType.Entry).Count();
+                validationsByPeriod.Exits = validations.Where(e => e.ValidationType == ValidationType.Exit).Count();
+                return validationsByPeriod;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
                 return null;
             }
         }

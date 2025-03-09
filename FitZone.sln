@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.CalorieTrackerServi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.SubscriptionValidationService", "FitZone.SubscriptionValidationService\FitZone.SubscriptionValidationService.csproj", "{0FDDBDD3-B2EA-8802-2C49-2575155654AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.StatisticsService", "FitZone.StatisticsService\FitZone.StatisticsService.csproj", "{5B32FBF4-DA1B-E6A2-5D92-29326B785BB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{0FDDBDD3-B2EA-8802-2C49-2575155654AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FDDBDD3-B2EA-8802-2C49-2575155654AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FDDBDD3-B2EA-8802-2C49-2575155654AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B32FBF4-DA1B-E6A2-5D92-29326B785BB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B32FBF4-DA1B-E6A2-5D92-29326B785BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B32FBF4-DA1B-E6A2-5D92-29326B785BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B32FBF4-DA1B-E6A2-5D92-29326B785BB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{1B97B077-54C7-6E28-8A54-5BF1570DD1FD} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
 		{0073C149-AD09-2B5E-D8EE-4C0725F499DB} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
 		{0FDDBDD3-B2EA-8802-2C49-2575155654AE} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
+		{5B32FBF4-DA1B-E6A2-5D92-29326B785BB0} = {DFE85248-A899-4C44-9A89-53F4CC621BEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF9FFD14-ADB0-47BD-9B0D-27BEB58DEA7D}

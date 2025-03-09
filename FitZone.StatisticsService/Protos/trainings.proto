@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "FitZone.ScheduleService.Protos";
+option csharp_namespace = "FitZone.StatisticsService.Protos";
 
 service TrainingsGrpc {
     rpc GetTrainingsNumber (TrainingsRequest) returns (TrainingsResponse);
