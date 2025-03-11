@@ -4,7 +4,7 @@ namespace FitZone.AuthService.Dtos
 {
     public class UserDto
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Email { get; set; }
 
@@ -12,6 +12,8 @@ namespace FitZone.AuthService.Dtos
 
 
         public string LastName { get; set; }
+
+        public Guid? GymId { get; set; }
 
         public string? PhoneNumber { get; set; }
 
@@ -24,6 +26,7 @@ namespace FitZone.AuthService.Dtos
             FirstName = user.FirstName;
             LastName = user.LastName;
             PhoneNumber = user.PhoneNumber;
+            GymId = user.GymId;
         }
     }
 

@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 
 namespace FitZone.AuthService.Data
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }

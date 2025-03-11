@@ -18,16 +18,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthentificationRepository, AuthentificationRepository>();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContextPool<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 7;
     options.Password.RequireNonAlphanumeric = true;

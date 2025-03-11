@@ -1,4 +1,4 @@
-﻿namespace FitZone.AuthService.Entities
+﻿namespace FitZone.AuthService.Entities.Enums
 {
     public enum Role
     {

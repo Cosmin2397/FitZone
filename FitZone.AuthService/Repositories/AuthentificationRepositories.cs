@@ -1,5 +1,6 @@
 ﻿using FitZone.AuthService.Dtos;
 using FitZone.AuthService.Entities;
+using FitZone.AuthService.Entities.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,10 +14,10 @@ namespace FitZone.AuthService.Repositories
     public class AuthentificationRepository : IAuthentificationRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthentificationRepository(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
+        public AuthentificationRepository(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -34,7 +35,7 @@ namespace FitZone.AuthService.Repositories
             if (await _userManager.CheckPasswordAsync(identityUser, user.Password))
             {
                 var roles = await _userManager.GetRolesAsync(identityUser);
-                response.JwtToken = this.GenerateToken(user.Email, (List<string>)roles, true, identityUser.Id.ToString());
+                response.JwtToken = this.GenerateToken(user.Email, (List<string>)roles, true, identityUser.Id.ToString(),identityUser.GymId);
                 response.RefreshToken = this.GenerateRefreshToken();
                 identityUser.RefreshToken = response.RefreshToken;
                 identityUser.RefreshTokenExpiry = DateTime.Now.AddHours(5);
@@ -70,7 +71,8 @@ namespace FitZone.AuthService.Repositories
                 UserName = register.Email,
                 FirstName = register.FirstName,
                 LastName = register.LastName,
-                PhoneNumber = register.PhoneNumber
+                PhoneNumber = register.PhoneNumber,
+                GymId = register.GymId
             };
 
             var result = await _userManager.CreateAsync(user, register.Password);
@@ -79,13 +81,13 @@ namespace FitZone.AuthService.Repositories
                 return false;
             }
 
-            string roleName = register.IsEmployee ? register.RoleName.ToString() : "Client";
+            string roleName = register.IsEmployee ? register.RoleName.ToString() : Role.Client.ToString();
 
             // Verifică dacă rolul există
             var roleExists = await _roleManager.RoleExistsAsync(roleName);
             if (!roleExists)
             {
-                await _roleManager.CreateAsync(new IdentityRole(roleName));
+                await _roleManager.CreateAsync(new ApplicationRole(roleName));
             }
 
             // Adaugă rolul utilizatorului
@@ -118,7 +120,7 @@ namespace FitZone.AuthService.Repositories
             }
 
             var roles = await _userManager.GetRolesAsync(identityUser);
-            response.JwtToken = this.GenerateToken(identityUser.Email, (List<string>)roles, true, identityUser.Id.ToString());
+            response.JwtToken = this.GenerateToken(identityUser.Email, (List<string>)roles, true, identityUser.Id.ToString(), identityUser.GymId);
             response.RefreshToken = this.GenerateRefreshToken();
             identityUser.RefreshToken = response.RefreshToken;
             identityUser.RefreshTokenExpiry = DateTime.Now.AddHours(5);
@@ -156,13 +158,14 @@ namespace FitZone.AuthService.Repositories
             return Convert.ToBase64String(randomNumber);
         }
 
-        private string GenerateToken(string userName, List<string> roles, bool isLogged, string id)
+        private string GenerateToken(string userName, List<string> roles, bool isLogged, string id, Guid? gymId)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name,userName),
                 new Claim(ClaimTypes.Sid,id),
                 new Claim(ClaimTypes.Authentication,isLogged.ToString()),
+                new Claim(ClaimTypes.GroupSid,gymId.ToString())
             };
 
             foreach (var role in roles)
@@ -189,31 +192,31 @@ namespace FitZone.AuthService.Repositories
         public async Task<List<UserDto>> GetAllUsers()
         {
             var users = _userManager.Users.ToList();
-
-            var userDtos = await Task.WhenAll(users.Select(async user =>
+            List<UserDto> responseUsers = new List<UserDto>(); 
+            foreach (var user in users)
             {
                 var userDto = new UserDto();
                 userDto.ConvertFromApplicationUser(user);
                 userDto.Roles = (List<string>)await _userManager.GetRolesAsync(user);
-                return userDto;
-            }));
+                responseUsers.Add(userDto);
+            }
 
-            return userDtos.ToList();
+            return responseUsers;
         }
 
         public async Task<List<UserDto>> GetGymUsers(Guid gymId)
         {
             var users = _userManager.Users.Where(g=> g.GymId == gymId).ToList();
-
-            var userDtos = await Task.WhenAll(users.Select(async user =>
+            List<UserDto> responseUsers = new List<UserDto>();
+            foreach (var user in users)
             {
                 var userDto = new UserDto();
                 userDto.ConvertFromApplicationUser(user);
                 userDto.Roles = (List<string>)await _userManager.GetRolesAsync(user);
-                return userDto;
-            }));
+                responseUsers.Add(userDto);
+            }
 
-            return userDtos.ToList();
+            return responseUsers;
         }
 
         public async Task<UserDto> GetUserByEmail(string email)

@@ -90,6 +90,17 @@ namespace FitZone.AuthService.Controllers
             return NotFound();
         }
 
+        [HttpGet("Users/{gymId}")]
+        public async Task<ActionResult> GetGymUsers(Guid gymId)
+        {
+            var users = await authService.GetGymUsers(gymId);
+            if (users.Count > 0)
+            {
+                return Ok(users);
+            }
+            return NotFound();
+        }
+
         [HttpGet("{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {

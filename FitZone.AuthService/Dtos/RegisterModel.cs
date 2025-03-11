@@ -1,4 +1,4 @@
-﻿using FitZone.AuthService.Entities;
+﻿using FitZone.AuthService.Entities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace FitZone.AuthService.Dtos
@@ -28,9 +28,11 @@ namespace FitZone.AuthService.Dtos
         [RegularExpression(@"^(\+4|0)[0-9]{9}$", ErrorMessage = "Invalid phone number.")]
         public string PhoneNumber { get; set; }
 
-        public bool IsEmployee { get; set; }
+        public bool IsEmployee { get; set; } = false;
 
         public Role RoleName { get; set; }
+
+        public Guid? GymId { get; set; }
 
         public EmployeeInfoModel? EmployeeData { get; set; } = null;
     }
