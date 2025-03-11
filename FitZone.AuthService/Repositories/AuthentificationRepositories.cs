@@ -13,12 +13,14 @@ namespace FitZone.AuthService.Repositories
     public class AuthentificationRepository : IAuthentificationRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthentificationRepository(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AuthentificationRepository(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _roleManager = roleManager;
         }
 
         public async Task<LoginResponse> LoginUser(LoginModel user)
@@ -68,23 +70,34 @@ namespace FitZone.AuthService.Repositories
                 UserName = register.Email,
                 FirstName = register.FirstName,
                 LastName = register.LastName,
-                PasswordHash = register.Password,
                 PhoneNumber = register.PhoneNumber
             };
 
-            var result = await _userManager.CreateAsync(user, user.PasswordHash!);
-            if(!register.IsEmployee)
+            var result = await _userManager.CreateAsync(user, register.Password);
+            if (!result.Succeeded)
             {
-                
-                //Adauga rolul de client in baza de date pentru utilizator
+                return false;
             }
-            else
+
+            string roleName = register.IsEmployee ? register.RoleName.ToString() : "Client";
+
+            // Verifică dacă rolul există
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+
+            // Adaugă rolul utilizatorului
+            var rolesResult =  await _userManager.AddToRoleAsync(user, roleName);
+
+            if (register.IsEmployee && register.EmployeeData != null)
             {
                 //Verifica daca rolul exista deja in baza de date, dupa nume.
                 //Daca nu exista il adauga si adauga in tabela de users role rolul asociat contului
                 //Trimite eveniment la employee api pentru a adauga angajatul cu datele lui
             }
-                return result.Succeeded;
+                return result.Succeeded && rolesResult.Succeeded;
         }
 
         public async Task<LoginResponse> RefreshToken(RefreshTokenModel model)

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FitZone.AuthService.Entities
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<Guid>
     {
         [Required(ErrorMessage = "First Name is required.")]
         public string FirstName { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FitZone.AuthService.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace FitZone.AuthService.Dtos
 {
@@ -29,7 +30,7 @@ namespace FitZone.AuthService.Dtos
 
         public bool IsEmployee { get; set; }
 
-        public string RoleName { get; set; }
+        public Role RoleName { get; set; }
 
         public EmployeeInfoModel? EmployeeData { get; set; } = null;
     }

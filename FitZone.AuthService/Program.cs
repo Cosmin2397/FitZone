@@ -1,6 +1,7 @@
 using FitZone.AuthService.Data;
 using FitZone.AuthService.Entities;
 using FitZone.AuthService.Repositories;
+using FitZone.AuthService.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthentificationRepository, AuthentificationRepository>();
+builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContextPool<AppDbContext>(options =>
