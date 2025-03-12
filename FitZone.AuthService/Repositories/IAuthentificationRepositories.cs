@@ -19,7 +19,7 @@ namespace FitZone.AuthService.Repositories
 
         Task<bool> DeleteUser(string email);
 
-        Task<bool> UpdateUser(ApplicationUser newUser);
+        Task<bool> UpdateUser(UpdateUser updatetUser);
 
         Task<UserDto> GetUserByEmail(string email);
     }

@@ -243,9 +243,9 @@ namespace FitZone.AuthService.Repositories
             return result.Succeeded;
         }
 
-        public async Task<bool> UpdateUser(ApplicationUser newUser)
+        public async Task<bool> UpdateUser(UpdateUser newUser)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == newUser.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == newUser.Id);
 
             if (user == null)
             {
@@ -255,7 +255,7 @@ namespace FitZone.AuthService.Repositories
             user.FirstName = newUser.FirstName;
             user.LastName = newUser.LastName;
             user.PhoneNumber = newUser.PhoneNumber;
-
+  
             var result = await _userManager.UpdateAsync(user);
 
             return result.Succeeded;

@@ -53,7 +53,7 @@ namespace FitZone.AuthService.Services
             return await _authRepository.RegisterUser(user);
         }
 
-        public async Task<bool> UpdateUser(ApplicationUser newUser)
+        public async Task<bool> UpdateUser(UpdateUser newUser)
         {
             return await _authRepository.UpdateUser(newUser);
         }

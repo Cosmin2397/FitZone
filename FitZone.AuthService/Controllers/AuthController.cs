@@ -116,7 +116,7 @@ namespace FitZone.AuthService.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutUser(ApplicationUser updatedUser)
+        public async Task<IActionResult> PutUser(UpdateUser updatedUser)
         {
             try
             {
