@@ -57,5 +57,10 @@ namespace FitZone.AuthService.Services
         {
             return await _authRepository.UpdateUser(newUser);
         }
+
+        public async Task<bool> UpdateUserGym(Guid userId, Guid newGym)
+        {
+            return await _authRepository.UpdateUserGym(userId, newGym);
+        }
     }
 }

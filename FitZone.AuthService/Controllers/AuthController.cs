@@ -130,6 +130,21 @@ namespace FitZone.AuthService.Controllers
             return Ok();
         }
 
+        [HttpPut("updateUserGym")]
+        public async Task<IActionResult> PutUserGym(Guid userId, Guid newGym)
+        {
+            try
+            {
+                await authService.UpdateUserGym(userId,newGym);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }
+
         [HttpDelete("{email}")]
         public async Task<ActionResult<bool>> DeleteUser(string email)
         {

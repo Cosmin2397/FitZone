@@ -261,6 +261,23 @@ namespace FitZone.AuthService.Repositories
             return result.Succeeded;
         }
 
+        public async Task<bool> UpdateUserGym(Guid userId, Guid newGym)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.GymId = newGym;
+            var result = await _userManager.UpdateAsync(user);
+
+            //Produce eveniment pentru a sterge abonamentele active, programarile
+
+            return result.Succeeded;
+        }
+
     }
 
 }

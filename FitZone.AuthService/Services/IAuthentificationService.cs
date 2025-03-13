@@ -21,6 +21,8 @@ namespace FitZone.AuthService.Services
 
         Task<bool> UpdateUser(UpdateUser newUser);
 
+        Task<bool> UpdateUserGym(Guid userId, Guid newGym);
+
         Task<UserDto> GetUserByEmail(string email);
     }
 }
