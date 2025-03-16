@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.SubscriptionValidat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.StatisticsService", "FitZone.StatisticsService\FitZone.StatisticsService.csproj", "{5B32FBF4-DA1B-E6A2-5D92-29326B785BB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.AuthService", "FitZone.AuthService\FitZone.AuthService.csproj", "{FFE621F0-8F45-255E-162A-27A3FC4224E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.AuthentificationService", "FitZone.AuthService\FitZone.AuthentificationService.csproj", "{FFE621F0-8F45-255E-162A-27A3FC4224E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitZone.AuthorizationService", "FitZone.AuthorizationService\FitZone.AuthorizationService.csproj", "{1CB7C362-1EC6-468B-8012-6D4EA93D1ADF}"
 EndProject
