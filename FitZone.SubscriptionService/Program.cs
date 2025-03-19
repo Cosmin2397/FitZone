@@ -1,6 +1,7 @@
 ﻿using FitZone.SubscriptionService.Features.Subscription.GetSubscriptionById;
 using FitZone.SubscriptionService.Features.Subscription.GetSubscriptions;
 using FitZone.SubscriptionService.gRPC;
+using FitZone.SubscriptionService.RabbitMQ;
 using FitZone.SubscriptionService.Shared.Abstractions;
 using FitZone.SubscriptionService.Shared.Data;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddGrpc();
+builder.AddRabbitMQClient(connectionName: "messaging");
+builder.Services.AddHostedService<UserDeletedConsumer>();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContextPool<AppDbContext>(options =>

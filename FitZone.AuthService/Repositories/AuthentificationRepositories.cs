@@ -1,4 +1,6 @@
-﻿using FitZone.AuthService.Dtos;
+﻿using FitZone.AuthentificationService.Dtos.RabbitMQ;
+using FitZone.AuthentificationService.RabbitMQ;
+using FitZone.AuthService.Dtos;
 using FitZone.AuthService.Entities;
 using FitZone.AuthService.Entities.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -16,12 +18,14 @@ namespace FitZone.AuthService.Repositories
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly RabbitMQPublisher _publisher;
 
-        public AuthentificationRepository(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<ApplicationRole> roleManager)
+        public AuthentificationRepository(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<ApplicationRole> roleManager, RabbitMQPublisher publisher)
         {
             _userManager = userManager;
             _configuration = configuration;
             _roleManager = roleManager;
+            _publisher = publisher;
         }
 
         public async Task<LoginResponse> LoginUser(LoginModel user)
@@ -240,6 +244,11 @@ namespace FitZone.AuthService.Repositories
 
             var result = await _userManager.DeleteAsync(user);
             //Produce eveniment de stergere utilizator pentu employee api si schedule api, subscription api, calorie tracker service
+            if (result.Succeeded)
+            {
+                var userDeletedEvent = new UserDeletedEvent { Id = user.Id };
+                _publisher.Publish("user.events", "user.deleted", userDeletedEvent);
+            }
             return result.Succeeded;
         }
 

@@ -1,3 +1,4 @@
+using FitZone.AuthentificationService.RabbitMQ;
 using FitZone.AuthService.Data;
 using FitZone.AuthService.Entities;
 using FitZone.AuthService.Repositories;
@@ -18,6 +19,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthentificationRepository, AuthentificationRepository>();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
+builder.AddRabbitMQClient(connectionName: "messaging");
+builder.Services.AddSingleton<RabbitMQPublisher>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
