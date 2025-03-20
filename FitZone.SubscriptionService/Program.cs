@@ -21,7 +21,6 @@ builder.AddRabbitMQClient(connectionName: "messaging");
 builder.Services.AddHostedService<UserDeletedConsumer>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddDbContextPool<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 var app = builder.Build();
