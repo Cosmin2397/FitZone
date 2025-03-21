@@ -1,13 +1,13 @@
-﻿using FitZone.SubscriptionService.Shared.Data;
-using FitZone.SubscriptionService.Shared.Domain.DTOs.RabbitMQ;
+﻿using FitZone.ScheduleService.Data;
+using FitZone.ScheduleService.DTOs.RabbitMQ;
+using FitZone.ScheduleService.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
-namespace FitZone.SubscriptionService.RabbitMQ
+namespace FitZone.ScheduleService.RabbitMQ
 {
     public class UserDeletedConsumer : BackgroundService
     {
@@ -28,7 +28,7 @@ namespace FitZone.SubscriptionService.RabbitMQ
             channel.ExchangeDeclare(exchange: "user.events", type: ExchangeType.Fanout);
 
             // Declararea unui queue unic pentru acest consumator
-            var queueName = channel.QueueDeclare(queue: "user.deleted.subscriptions.queue", durable: true, exclusive: false, autoDelete: false).QueueName;
+            var queueName = channel.QueueDeclare(queue: "user.deleted.queue", durable: true, exclusive: false, autoDelete: false).QueueName;
 
             // Leagă queue-ul la exchange, fără routing key
             channel.QueueBind(queue: queueName, exchange: "user.events", routingKey: "");
@@ -48,36 +48,49 @@ namespace FitZone.SubscriptionService.RabbitMQ
                     using var scope = _scopeFactory.CreateScope();
                     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-                    var subscriptions = await context.Subscriptions
-                        .Where(i => i.ClientId == userDeleted.Id && i.Status != Shared.Domain.Enums.Status.Canceled)
+                    var trainings = await context.Trainings.Include(x => x.ScheduledClients)
+                        .Where(z => z.TrainingStatus == Status.Created && z.TrainerId == userDeleted.Id)
                         .ToListAsync();
 
-                    if (subscriptions.Any())
-                    {
-                        subscriptions.ForEach(s =>
-                        {
-                            s.Status = Shared.Domain.Enums.Status.Canceled;
-                            s.EndDate = DateTime.Now;
-                        });
+                    var schedules = await context.TrainingSchedules
+                        .Where(i => i.ClientId == userDeleted.Id && i.ScheduleStatus == TrainingScheduleStatus.Accepted)
+                        .ToListAsync();
 
-                        var result = await context.SaveChangesAsync();
-                        if (result > 0)
+                    if (trainings.Any())
+                    {
+                        trainings.ForEach(s =>
                         {
-                            Console.WriteLine($"Subscriptiile utilizatorului sters au fost anulate cu succes: {userDeleted.Id}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Eroare la anularea subscriptiilor utilizatorului: {userDeleted.Id}");
-                        }
+                            s.TrainingStatus = Status.Canceled;
+                            s.ScheduledClients.ForEach(sc => sc.ScheduleStatus = TrainingScheduleStatus.TrainingCanceled);
+                        });
                     }
                     else
                     {
-                        Console.WriteLine($"Utilizatorul: {userDeleted.Id} nu are subscriptii valide");
+                        Console.WriteLine($"Utilizatorul: {userDeleted.Id} nu are antrenamente programate valide");
+                    }
+
+                    if (schedules.Any())
+                    {
+                        schedules.ForEach(s => s.ScheduleStatus = TrainingScheduleStatus.Canceled);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Utilizatorul: {userDeleted.Id} nu are programari valide");
+                    }
+
+                    var result = await context.SaveChangesAsync();
+                    if (result > 0)
+                    {
+                        Console.WriteLine($"Stergerea antrenamentelor/programarilor a fost cu succes: {userDeleted.Id}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Eroare la anularea antrenamentelor/programarilor utilizatorului: {userDeleted.Id}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Exceptie la anularea subscriptiilor: {ex.Message}");
+                    Console.WriteLine($"Exceptie la anularea antrenamentelor/programarilor: {ex.Message}");
                 }
             };
 

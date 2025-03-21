@@ -13,13 +13,18 @@ namespace FitZone.AuthentificationService.RabbitMQ
             _connection = connection;
         }
 
-        public void Publish<T>(string exchange, string routingKey, T message)
+        public void Publish<T>(string exchange, T message)
         {
             using var channel = _connection.CreateModel();
-            channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Topic);
+
+            // Declară exchange-ul de tip fanout
+            channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Fanout);
 
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
-            channel.BasicPublish(exchange: exchange, routingKey: routingKey, basicProperties: null, body: body);
+
+            channel.BasicPublish(exchange: exchange, routingKey: "", basicProperties: null, body: body);
+            Console.WriteLine($"[x] Sent message to exchange: {exchange}");
         }
     }
+
 }

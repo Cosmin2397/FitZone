@@ -247,7 +247,8 @@ namespace FitZone.AuthService.Repositories
             if (result.Succeeded)
             {
                 var userDeletedEvent = new UserDeletedEvent { Id = user.Id };
-                _publisher.Publish("user.events", "user.deleted", userDeletedEvent);
+                _publisher.Publish("user.events", userDeletedEvent);
+
             }
             return result.Succeeded;
         }

@@ -10,7 +10,9 @@ var calorieTrackerApi = builder.AddProject<Projects.FitZone_CalorieTrackerServic
 
 builder.AddProject<Projects.FitZone_GymsManagement>("fitzone-gymsmanagement");
 
-builder.AddProject<Projects.FitZone_ScheduleService>("fitzone-scheduleservice");
+builder.AddProject<Projects.FitZone_ScheduleService>("fitzone-scheduleservice")
+        .WaitFor(rabbitmq)
+        .WithReference(rabbitmq);
 
 builder.AddProject<Projects.FitZone_EmployeeManagementAPI>("fitzone-employeemanagementapi");
 
