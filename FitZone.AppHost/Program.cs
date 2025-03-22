@@ -14,7 +14,9 @@ builder.AddProject<Projects.FitZone_ScheduleService>("fitzone-scheduleservice")
         .WaitFor(rabbitmq)
         .WithReference(rabbitmq);
 
-builder.AddProject<Projects.FitZone_EmployeeManagementAPI>("fitzone-employeemanagementapi");
+builder.AddProject<Projects.FitZone_EmployeeManagementAPI>("fitzone-employeemanagementapi")
+        .WaitFor(rabbitmq)
+        .WithReference(rabbitmq); ;
 
 builder.AddProject<Projects.FitZone_SubscriptionService>("fitzone-subscriptionservice")
     .WaitFor(rabbitmq)

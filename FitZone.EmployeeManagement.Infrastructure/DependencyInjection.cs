@@ -17,8 +17,7 @@ namespace FitZone.EmployeeManagement.Infrastructure
             // Add services to the container.
             services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
             services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-
-            services.AddDbContext<ApplicationDbContext>((sp, options) =>
+            services.AddDbContextPool<ApplicationDbContext>((sp, options) =>
             {
                 options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                 options.UseSqlServer(connectionString);

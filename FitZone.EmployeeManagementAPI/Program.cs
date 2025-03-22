@@ -1,6 +1,7 @@
 using FitZone.EmployeeManagement.Infrastructure;
 using FitZone.EmployeeManagementAPI;
 using FitZone.EmployeeManagement.Application;
+using FitZone.EmployeeManagement.Application.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,10 @@ builder.Services
     .AddApplicationServices(builder.Configuration)
     .AddInfrastructureServices(builder.Configuration)
     .AddApiServices(builder.Configuration);
+
+builder.AddRabbitMQClient(connectionName: "messaging");
+builder.Services.AddHostedService<EmployeeUserAddedConsumer>();
+
 var app = builder.Build();
 
 

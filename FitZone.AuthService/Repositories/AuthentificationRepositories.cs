@@ -1,4 +1,5 @@
-﻿using FitZone.AuthentificationService.Dtos.RabbitMQ;
+﻿using FitZone.AuthentificationService.Dtos;
+using FitZone.AuthentificationService.Dtos.RabbitMQ;
 using FitZone.AuthentificationService.RabbitMQ;
 using FitZone.AuthService.Dtos;
 using FitZone.AuthService.Entities;
@@ -99,9 +100,10 @@ namespace FitZone.AuthService.Repositories
 
             if (register.IsEmployee && register.EmployeeData != null)
             {
-                //Verifica daca rolul exista deja in baza de date, dupa nume.
-                //Daca nu exista il adauga si adauga in tabela de users role rolul asociat contului
-                //Trimite eveniment la employee api pentru a adauga angajatul cu datele lui
+                var employee = new EmployeeInfoPublishEvent();
+                var role = await _roleManager.FindByNameAsync(roleName);
+                employee.AddEmployee(register.EmployeeData, user.Id, role.Id, user.GymId, user.FirstName ,user.LastName, user.PhoneNumber);
+                _publisher.Publish("employee.events", employee);
             }
                 return result.Succeeded && rolesResult.Succeeded;
         }
