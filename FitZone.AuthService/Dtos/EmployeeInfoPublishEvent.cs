@@ -31,7 +31,7 @@ namespace FitZone.AuthentificationService.Dtos
             GymId = gymId;
             FirstName = firstName;
             LastName = lastName;
-            PhoneNumber = phoneNumber.Substring(2,9);
+            PhoneNumber = phoneNumber.Substring(1,9);
             Birthday = model.Birthday;
             StartDate = model.StartDate;
             MonthlyPayment = model.MonthlyPayment;

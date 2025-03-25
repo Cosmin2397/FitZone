@@ -18,11 +18,13 @@ namespace FitZone.EmployeeManagement.Application.RabbitMQ
     {
         private readonly IConnection _connection;
         private readonly ISender _sender;
+        private readonly IServiceProvider _serviceProvider;
 
-        public EmployeeUserAddedConsumer(IConnection connection, ISender sender)
+        public EmployeeUserAddedConsumer(IConnection connection, ISender sender, IServiceProvider serviceProvider)
         {
             _connection = connection;
             _sender = sender;
+            _serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -47,7 +49,7 @@ namespace FitZone.EmployeeManagement.Application.RabbitMQ
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     var employeeData = JsonSerializer.Deserialize<JsonElement>(message);
-
+                    Guid randomEmployeeContract = Guid.NewGuid();
                     var employeeDto = new EmployeeDto(
                         employeeData.GetProperty("Id").GetGuid(),
                         employeeData.GetProperty("GymId").GetGuid(),
@@ -59,7 +61,7 @@ namespace FitZone.EmployeeManagement.Application.RabbitMQ
                         new List<EmployeeContractDto>
                         {
                         new EmployeeContractDto(
-                            Guid.Empty, // ID-ul va fi generat în baza de date
+                            randomEmployeeContract,
                             employeeData.GetProperty("Id").GetGuid(),
                             employeeData.GetProperty("StartDate").GetDateTime(),
                             employeeData.GetProperty("EndDate").GetDateTime(),
@@ -70,18 +72,22 @@ namespace FitZone.EmployeeManagement.Application.RabbitMQ
 
                     Console.WriteLine(JsonSerializer.Serialize(employeeDto, new JsonSerializerOptions { WriteIndented = true }));
 
-
-                    var command = new AddEmployeeCommand(employeeDto);
-
-                    var result = await _sender.Send(command);
-                    if (result.Id != null)
+                    using (var scope = _serviceProvider.CreateScope())
                     {
-                        Console.WriteLine($"Angajatul {employeeDto.fullName} a fost adaugat cu succes");
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var command = new AddEmployeeCommand(employeeDto);
+                        var result = await mediator.Send(command);
+
+                        if (result.Id != null)
+                        {
+                            Console.WriteLine($"Angajatul {employeeDto.fullName} a fost adaugat cu succes");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Angajatul {employeeDto.fullName} nu a fost adaugat cu succes");
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine($"Angajatul {employeeDto.fullName} nu a fost adaugat cu succes");
-                     }
+
                 }
                 catch (Exception ex)
                 {
