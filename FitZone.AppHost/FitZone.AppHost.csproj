@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
 
@@ -13,13 +13,16 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.0.0" />
     <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FitZone.AuthService\FitZone.AuthentificationService.csproj" />
     <ProjectReference Include="..\FitZone.CalorieTrackerService\FitZone.CalorieTrackerService.csproj" />
     <ProjectReference Include="..\FitZone.EmployeeManagementAPI\FitZone.EmployeeManagementAPI.csproj" />
     <ProjectReference Include="..\FitZone.GymsManagement\FitZone.GymsManagement.csproj" />
+    <ProjectReference Include="..\FitZone.Ocelot\FitZone.Ocelot.csproj" />
     <ProjectReference Include="..\FitZone.ScheduleService\FitZone.ScheduleService.csproj" />
     <ProjectReference Include="..\FitZone.StatisticsService\FitZone.StatisticsService.csproj" />
     <ProjectReference Include="..\FitZone.SubscriptionService\FitZone.SubscriptionService.csproj" />

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FitZone.EmployeeManagement.Application.Employees.Commands.AddEmployee;
+using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -13,6 +15,7 @@ namespace FitZone.EmployeeManagement.Application
             {
                 config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             });
+            services.AddScoped<IRequestHandler<AddEmployeeCommand, AddEmployeeResult>, AddEmployeeHandler>();
 
             return services;
         }

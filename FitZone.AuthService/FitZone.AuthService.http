@@ -1,0 +1,6 @@
+@FitZone.AuthService_HostAddress = http://localhost:5265
+
+GET {{FitZone.AuthService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
