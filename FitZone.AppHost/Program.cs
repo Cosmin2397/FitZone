@@ -28,4 +28,6 @@ builder.AddProject<Projects.FitZone_AuthentificationService>("fitzone-authservic
     .WaitFor(rabbitmq)
     .WithReference(rabbitmq);
 
+builder.AddProject<Projects.FitZone_Ocelot>("fitzone-ocelot");
+
 builder.Build().Run();

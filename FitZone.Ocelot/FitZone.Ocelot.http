@@ -1,0 +1,6 @@
+@FitZone.Ocelot_HostAddress = http://localhost:5074
+
+GET {{FitZone.Ocelot_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

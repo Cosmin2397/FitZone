@@ -22,6 +22,7 @@
     <ProjectReference Include="..\FitZone.CalorieTrackerService\FitZone.CalorieTrackerService.csproj" />
     <ProjectReference Include="..\FitZone.EmployeeManagementAPI\FitZone.EmployeeManagementAPI.csproj" />
     <ProjectReference Include="..\FitZone.GymsManagement\FitZone.GymsManagement.csproj" />
+    <ProjectReference Include="..\FitZone.Ocelot\FitZone.Ocelot.csproj" />
     <ProjectReference Include="..\FitZone.ScheduleService\FitZone.ScheduleService.csproj" />
     <ProjectReference Include="..\FitZone.StatisticsService\FitZone.StatisticsService.csproj" />
     <ProjectReference Include="..\FitZone.SubscriptionService\FitZone.SubscriptionService.csproj" />
