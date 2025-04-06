@@ -32,4 +32,6 @@ builder.AddProject<Projects.FitZone_StatisticsService>("fitzone-statistics");
 
 builder.AddProject<Projects.FitZone_Ocelot>("fitzone-ocelot");
 
+builder.AddProject<Projects.FitZone_Client_Web>("fitzone-client-web");
+
 builder.Build().Run();
