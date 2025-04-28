@@ -1,6 +1,7 @@
 using FitZone.Client.Web.Components;
-using FitZone.Client.Shared.Services;
 using FitZone.Client.Web.Services;
+using FitZone.Client.Shared.Services.Interfaces;
+using FitZone.Client.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,7 @@ builder.Services.AddRazorComponents()
 
 // Add device-specific services used by the FitZone.Client.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
-
+builder.Services.AddSharedServices(builder.Configuration);
 var app = builder.Build();
 
 app.MapDefaultEndpoints();

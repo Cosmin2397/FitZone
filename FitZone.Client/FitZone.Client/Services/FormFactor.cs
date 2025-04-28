@@ -1,4 +1,4 @@
-using FitZone.Client.Shared.Services;
+using FitZone.Client.Shared.Services.Interfaces;
 
 namespace FitZone.Client.Services;
 

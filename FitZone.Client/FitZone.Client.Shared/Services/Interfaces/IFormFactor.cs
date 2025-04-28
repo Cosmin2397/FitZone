@@ -1,4 +1,4 @@
-namespace FitZone.Client.Shared.Services
+namespace FitZone.Client.Shared.Services.Interfaces
 {
     public interface IFormFactor
     {

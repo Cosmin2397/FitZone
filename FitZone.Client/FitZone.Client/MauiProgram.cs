@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using FitZone.Client.Shared.Services;
 using FitZone.Client.Services;
+using FitZone.Client.Shared.Services.Interfaces;
+using FitZone.Client.Shared;
 
 namespace FitZone.Client;
 
@@ -18,7 +19,7 @@ public static class MauiProgram
 
         // Add device-specific services used by the FitZone.Client.Shared project
         builder.Services.AddSingleton<IFormFactor, FormFactor>();
-
+        builder.Services.AddSharedServices(builder.Configuration);
         builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG

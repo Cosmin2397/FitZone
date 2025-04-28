@@ -1,0 +1,119 @@
+﻿@page "/login"
+@inject NavigationManager navigationManager
+@inject IAuthentificationService userService
+@inject StorageService storageService
+@using FitZone.Client.Shared.Utilities
+@using FitZone.Client.Shared.DTOs
+@using FitZone.Client.Shared.Services.Interfaces
+@using FitZone.Client.Shared.Services
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+
+
+@if (!UserState.Instance.IsAuthentificated)
+{
+    <div class="login-container">
+        <div class="login-card">
+            <h3>Welcome Back 👋</h3>
+
+            @if (!string.IsNullOrEmpty(feedbackMessage))
+            {
+                <div class="alert @feedbackClass">
+                    @feedbackMessage
+                </div>
+            }
+
+            <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <InputText @bind-Value="loginModel.Email" class="form-control" placeholder="Enter your email" />
+                    <ValidationMessage For="@(() => loginModel.Email)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <InputText @bind-Value="loginModel.Password" class="form-control" type="password" placeholder="Enter your password" />
+                    <ValidationMessage For="@(() => loginModel.Password)" />
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+            </EditForm>
+        </div>
+    </div>
+}
+else
+{
+    <div class="login-container">
+        <div class="login-card">
+            <h3>Already Logged In</h3>
+            <button class="btn btn-warning" @onclick="LogoutUser">Logout</button>
+        </div>
+    </div>
+}
+
+
+@code {
+    private LoginRequestDto loginModel = new LoginRequestDto();
+    private string feedbackMessage;
+    private string feedbackClass;
+
+    private async Task HandleLogin()
+    {
+        var loginResponse = await userService.Login(loginModel);
+
+        if (loginResponse != null && !string.IsNullOrEmpty(loginResponse.JwtToken))
+        {
+            feedbackMessage = "Login successful!";
+            feedbackClass = "alert-success";
+
+            // Salvăm token-urile în localStorage
+            await storageService.SetItemAsync("JwtToken", loginResponse.JwtToken);
+            await storageService.SetItemAsync("RefreshToken", loginResponse.RefreshToken);
+
+            // Citim token-ul din localStorage
+            var jwtToken = await storageService.GetItemAsync("JwtToken");
+
+            if (!string.IsNullOrEmpty(jwtToken))
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtToken);
+
+                var userEmail = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                var role = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                var id = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value;
+
+                UserState.Instance.SetUserState(true, userEmail, role, id, jwtToken);
+            }
+
+            StateHasChanged();
+
+            navigationManager.NavigateTo("/", true);
+        }
+        else
+        {
+            feedbackMessage = "Login failed.";
+            feedbackClass = "alert-danger";
+        }
+    }
+    private async Task LogoutUser()
+    {
+        // Ștergem token-urile din localStorage
+        await storageService.RemoveItemAsync("JwtToken");
+        await storageService.RemoveItemAsync("RefreshToken");
+
+        // Facem logout în backend
+        if (!string.IsNullOrEmpty(UserState.Instance.GetUsername))
+        {
+            await userService.Logout(UserState.Instance.GetUsername);
+            UserState.Instance.SetUserState(false, "0", "nedifinit", "0", string.Empty);
+        }
+
+        // Redirecționăm utilizatorul la pagina de login
+        navigationManager.NavigateTo("/login", true);
+    }
+
+
+}
