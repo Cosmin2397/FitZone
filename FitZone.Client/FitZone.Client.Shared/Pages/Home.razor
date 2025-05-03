@@ -4,12 +4,30 @@
 @inject IFormFactor FormFactor
 
 <PageTitle>Home</PageTitle>
+@if(UserState.Instance.IsAuthentificated)
+{
+    if(UserState.Instance.GetRole == "Client")
+    {
+        <HomeClient></HomeClient>
+    }
+    else if (UserState.Instance.GetRole == "Employee")
+    {}
+    else if (UserState.Instance.GetRole == "PersonalTrainer")
+    { }
+    else if (UserState.Instance.GetRole == "GymManager")
+    { }
+    else if (UserState.Instance.GetRole == "AppManager")
+    { }
+    else
+    {
+        <Login></Login>
+    }
+}
+else
+{
+    <Login></Login>
+}
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
 
 @code {
-    private string factor => FormFactor.GetFormFactor();
-    private string platform => FormFactor.GetPlatform();
 }

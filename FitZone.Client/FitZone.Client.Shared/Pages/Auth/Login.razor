@@ -2,19 +2,12 @@
 @inject NavigationManager navigationManager
 @inject IAuthentificationService userService
 @inject StorageService storageService
-@using FitZone.Client.Shared.Utilities
-@using FitZone.Client.Shared.DTOs
-@using FitZone.Client.Shared.Services.Interfaces
-@using FitZone.Client.Shared.Services
-@using System.IdentityModel.Tokens.Jwt
-@using System.Security.Claims
-
 
 @if (!UserState.Instance.IsAuthentificated)
 {
     <div class="login-container">
         <div class="login-card">
-            <h3>Welcome Back 👋</h3>
+            <h4>Login To FitZone App 👋</h4>
 
             @if (!string.IsNullOrEmpty(feedbackMessage))
             {

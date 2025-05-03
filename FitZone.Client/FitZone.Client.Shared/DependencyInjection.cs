@@ -17,10 +17,11 @@ namespace FitZone.Client.Shared
         {
             services.AddScoped(sp => new HttpClient
              {
-                 BaseAddress = new Uri("https://10.0.2.2:7049")
+                 BaseAddress = new Uri("http://192.168.1.3:5074")
              });
 
             services.AddScoped<IAuthentificationService, AuthentificationService>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<StorageService>();
 
             return services;

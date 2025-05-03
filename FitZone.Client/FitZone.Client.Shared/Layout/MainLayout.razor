@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
-@using FitZone.Client.Shared.Utilities
+@inject StorageService storageService
+@inject NavigationManager navigationManager
+@inject IAuthentificationService userService
 
 @if(UserState.Instance.IsAuthentificated)
 {
@@ -9,10 +11,15 @@
         </div>
 
         <main>
-            <div class="top-row px-4">
-                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-            </div>
-
+            @if (UserState.Instance.IsAuthentificated)
+            {
+                <div class="user-header">
+                    <div class="user-greeting">
+                        <h6>Hello @UserName  <span>👋</span></h6>
+                    </div>
+                    <button type="submit" class="btn logout-btn" @onclick="LogoutUser" >Logout</button>
+                </div>
+            }
             <article class="content px-4">
                 @Body
             </article>
@@ -21,7 +28,7 @@
 }
 else
 {
-    <FitZone.Client.Shared.Pages.Auth.Login></FitZone.Client.Shared.Pages.Auth.Login>
+    <Login></Login>
 }
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -29,3 +36,32 @@ else
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code{
+    private string UserName = String.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserState.Instance.GetUsername != null)
+        {
+            UserName = UserState.Instance.GetUsername.Contains("@") ? UserState.Instance.GetUsername.Split('@')[0] : UserState.Instance.GetUsername;
+        }
+    }
+    private async Task LogoutUser()
+    {
+        // Ștergem token-urile din localStorage
+        await storageService.RemoveItemAsync("JwtToken");
+        await storageService.RemoveItemAsync("RefreshToken");
+
+        // Facem logout în backend
+        if (!string.IsNullOrEmpty(UserState.Instance.GetUsername))
+        {
+            await userService.Logout(UserState.Instance.GetUsername);
+            UserState.Instance.SetUserState(false, "0", "nedifinit", "0", string.Empty);
+        }
+
+        // Redirecționăm utilizatorul la pagina de login
+        navigationManager.NavigateTo("/login", true);
+    }
+
+ }

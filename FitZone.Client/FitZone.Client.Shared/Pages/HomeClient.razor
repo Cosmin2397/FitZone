@@ -1,0 +1,120 @@
+﻿@inject NavigationManager Navigation
+@inject ISubscriptionService subscriptionService
+@inject IFormFactor FormFactor
+
+<div class="home-container">
+    @if (isLoading)
+    {
+        <p>Loading your membership details...</p>
+    }
+    else if (subscription != null)
+    {
+        <!-- Cardul de detalii al abonamentului -->
+        <div class="membership-card">
+            <h3>Subscription Details</h3>
+            <p><strong>Gym Name:</strong> @subscription.GymDetails.GymName</p>
+            <p><strong>Address:</strong> @subscription.GymDetails.GymAddress</p>
+            <p><strong>Phone Number:</strong> <a href="tel:@subscription.GymDetails.PhoneNumber">@subscription.GymDetails.PhoneNumber</a></p>
+            <p>
+                <strong>Working Hours:</strong>
+                @foreach (var day in subscription.GymDetails.WorkingHours)
+                {
+                    <div>@day</div>
+                }
+            </p>
+
+            <p><strong>Valid Until:</strong> @subscription.ValidUntil.ToString("dd MMMM yyyy")</p>
+            <p><strong>Type:</strong> @subscription.SubscriptionType</p>
+        </div>
+        @if (platform.StartsWith("android"))
+        {
+            <!-- Butonul pentru QR code aflat în partea de jos a paginii -->
+            <div class="qr-code-btn-container">
+            <button class="btn qr-btn" @onclick="ShowQrCode">Show Access Code</button>
+        </div>
+        }
+        <!-- Pop-up pentru QR Code -->
+        @if (showQr)
+        {
+            <div class="qr-code-popup" @onclick="() => showQr = false">
+                <div class="qr-content animate-in" @onclick:stopPropagation>
+                    @if (!qrLoadFailed)
+                    {
+                        <img src="@qrCodeImageUrl" alt="QR Code" @onerror="QrLoadError" />
+                    }
+                    else
+                    {
+                        <p>⚠️ Failed to load QR Code.</p>
+                        <button class="btn retry-btn" @onclick="RetryLoadQr">Retry</button>
+                    }
+
+                    <button class="btn close-btn" @onclick="() => showQr = false">Close</button>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="no-subscription-card">
+            <p>You currently have no active subscription.</p>
+
+            <div class="btn-group">
+                <button class="btn primary-btn" @onclick="GoToBuySubscription">Buy a Subscription</button>
+                <button class="btn secondary-btn" @onclick="GoToSubscriptionHistory">Subscription History</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private SubscriptionDto? subscription;
+    private bool isLoading = true;
+    private bool showQr = false;
+    private bool qrLoadFailed = false;
+    private string qrCodeImageUrl = string.Empty;
+    private string displayName = "";
+    private string platform => FormFactor.GetPlatform().Trim().ToLower();
+    protected override async Task OnInitializedAsync()
+    {
+        var username = UserState.Instance.GetUsername;
+        displayName = username.Contains("@") ? username.Split('@')[0] : username;
+
+        try
+        {
+            subscription = await subscriptionService.GetSubscriptionByClientId(UserState.Instance.GetId);
+        }
+        catch
+        {
+            subscription = null;
+        }
+
+        isLoading = false;
+    }
+
+    void ShowQrCode()
+    {
+        qrCodeImageUrl = $"https://api.qrserver.com/v1/create-qr-code/?data={Uri.EscapeDataString(subscription.GymDetails.GymName + " | " + subscription.ValidUntil.ToShortDateString())}&size=200x200";
+        qrLoadFailed = false;
+        showQr = true;
+    }
+
+    void QrLoadError()
+    {
+        qrLoadFailed = true;
+    }
+
+    void RetryLoadQr()
+    {
+        ShowQrCode(); // Reîncarcă codul QR
+    }
+
+    void GoToBuySubscription()
+    {
+        Navigation.NavigateTo("/subscriptions/buy");
+    }
+
+    void GoToSubscriptionHistory()
+    {
+        Navigation.NavigateTo("/subscriptions/history");
+    }
+}

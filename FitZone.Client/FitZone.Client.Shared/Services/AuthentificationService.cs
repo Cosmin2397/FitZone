@@ -34,13 +34,21 @@ namespace FitZone.Client.Shared.Services
 
         public async Task<LoginResponseDto> Login(LoginRequestDto user)
         {
-            var response = await _httpClient.PostAsJsonAsync("/authService/Auth/sign-in", user);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+                var response = await _httpClient.PostAsJsonAsync("/authService/Auth/sign-in", user);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+                }
             }
-            return null;
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+           return null;
         }
 
         public async Task<LoginResponseDto> RefreshToken(RefreshTokenDto model)
