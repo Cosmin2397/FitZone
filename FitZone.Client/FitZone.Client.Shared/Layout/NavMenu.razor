@@ -9,22 +9,63 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            <NavLink class="nav-link" href="Account" Match="NavLinkMatch.All">
+                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> My Account
             </NavLink>
         </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+        @if(UserState.Instance.GetRole == "Client")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="CalorieTracker">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Calorie Tracker
+                </NavLink>
+            </div>
+        }
+        else if (UserState.Instance.GetRole == "Employee" || UserState.Instance.GetRole == "PersonalTrainer")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ManageClients">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Manage Clients
+                </NavLink>
+            </div>
+            if(UserState.Instance.GetRole == "Employee")
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="AccessHistory">
+                        <span class="bi bi-info-circle-fill-nav-menu" aria-hidden="true"></span> Access History
+                    </NavLink>
+                </div>
+            }
+            else if (UserState.Instance.GetRole == "PersonalTrainer")
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="ClientsJurnal">
+                        <span class="bi bi-info-circle-fill-nav-menu" aria-hidden="true"></span> Clients Food Jurnal
+                    </NavLink>
+                </div>
+            }
+        }
+        else if (UserState.Instance.GetRole == "GymManager")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="GymStatistics">
+                    <span class="bi bi-bar-chart-fill-nav-menu" aria-hidden="true"></span> Statistics
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ManageClients">
+                    <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Manage Clients/Employees
+                </NavLink>
+            </div>
+        }
+        else if (UserState.Instance.GetRole == "AppManager")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="weather">
+                    <span class="bi bi-gear-fill-nav-menu" aria-hidden="true"></span> Manage Clients
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 

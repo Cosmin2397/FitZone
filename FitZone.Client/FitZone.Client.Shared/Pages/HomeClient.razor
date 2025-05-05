@@ -1,6 +1,7 @@
 ﻿@inject NavigationManager Navigation
 @inject ISubscriptionService subscriptionService
 @inject IFormFactor FormFactor
+@inject IQrCodeScannerService QrCodeScannerService
 
 <div class="home-container">
     @if (isLoading)
@@ -9,6 +10,15 @@
     }
     else if (subscription != null)
     {
+        @if (platform.StartsWith("android") && (UserState.Instance.GetRole == "Employee" || UserState.Instance.GetRole == "GymManager"))
+        {
+            <div class="qr-code-btn-container">
+                <button class="btn qr-btn" @onclick="() => ScanEntry()">Scan Entry</button>
+                <button class="btn qr-btn" @onclick="() => ScanExit()">Scan Exit</button>
+            </div>
+        }
+        else
+        {
         <!-- Cardul de detalii al abonamentului -->
         <div class="membership-card">
             <h3>Subscription Details</h3>
@@ -26,6 +36,7 @@
             <p><strong>Valid Until:</strong> @subscription.ValidUntil.ToString("dd MMMM yyyy")</p>
             <p><strong>Type:</strong> @subscription.SubscriptionType</p>
         </div>
+        }
         @if (platform.StartsWith("android"))
         {
             <!-- Butonul pentru QR code aflat în partea de jos a paginii -->
@@ -74,6 +85,18 @@
     private string qrCodeImageUrl = string.Empty;
     private string displayName = "";
     private string platform => FormFactor.GetPlatform().Trim().ToLower();
+    private string scannedResult;
+
+    private async Task ScanEntry()
+    {
+        scannedResult = await QrCodeScannerService.ScanQrCodeAsync();
+    }
+
+    private async Task ScanExit()
+    {
+        scannedResult = await QrCodeScannerService.ScanQrCodeAsync();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         var username = UserState.Instance.GetUsername;

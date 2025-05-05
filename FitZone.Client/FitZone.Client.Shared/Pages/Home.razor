@@ -6,22 +6,7 @@
 <PageTitle>Home</PageTitle>
 @if(UserState.Instance.IsAuthentificated)
 {
-    if(UserState.Instance.GetRole == "Client")
-    {
-        <HomeClient></HomeClient>
-    }
-    else if (UserState.Instance.GetRole == "Employee")
-    {}
-    else if (UserState.Instance.GetRole == "PersonalTrainer")
-    { }
-    else if (UserState.Instance.GetRole == "GymManager")
-    { }
-    else if (UserState.Instance.GetRole == "AppManager")
-    { }
-    else
-    {
-        <Login></Login>
-    }
+    <HomeClient></HomeClient>
 }
 else
 {
