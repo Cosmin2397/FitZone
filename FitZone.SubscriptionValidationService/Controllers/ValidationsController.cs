@@ -16,7 +16,7 @@ namespace FitZone.SubscriptionValidationService.Controllers
             _validationsService = validationsService;
         }
 
-        [HttpGet("/clientacceses")]
+        [HttpGet("clientacceses")]
         public async Task<ActionResult<List<ClientsAccess>>> GetClientsAccesses(Guid gymId, DateTime startDate, DateTime endDate)
         {
             var accesses = await _validationsService.GetClientsAccesses(gymId,startDate,endDate);
@@ -29,7 +29,7 @@ namespace FitZone.SubscriptionValidationService.Controllers
             return accesses;
         }
 
-        [HttpGet("/employeesacceses")]
+        [HttpGet("employeesacceses")]
         public async Task<ActionResult<List<ClientsAccess>>> GetEmployeesAccesses(Guid gymId, DateTime startDate, DateTime endDate)
         {
             var accesses = await _validationsService.GetEmployeesAccesses(gymId, startDate, endDate);

@@ -10,6 +10,7 @@ namespace FitZone.Client.Shared.DTOs
 
     public class GymDetailDto
     {
+        public Guid GymId { get; set; }
         public string GymName { get; set; } = String.Empty;
         public string GymAddress { get; set; } = String.Empty;
         public string PhoneNumber { get; set; } = String.Empty;

@@ -21,12 +21,15 @@ namespace FitZone.AuthService.Dtos
 
         public void ConvertFromApplicationUser(ApplicationUser user)
         {
-            Id = user.Id;
-            Email = user.Email;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
-            PhoneNumber = user.PhoneNumber;
-            GymId = user.GymId;
+            if (user != null)
+            {
+                Id = user.Id;
+                Email = user.Email;
+                FirstName = user.FirstName;
+                LastName = user.LastName;
+                PhoneNumber = user.PhoneNumber;
+                GymId = user.GymId;
+            }
         }
     }
 

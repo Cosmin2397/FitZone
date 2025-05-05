@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FitZone.Client.Shared.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ namespace FitZone.Client.Shared.Utilities
         private string role;
         private string id;
         private string jwtToken;
+
+        private SubscriptionDto subscription;
 
         private UserState() { }
 
@@ -31,6 +34,10 @@ namespace FitZone.Client.Shared.Utilities
             this.jwtToken = jwtToken;
         }
 
+        public void SetUserSubscription(SubscriptionDto subscriptionDto)
+        {
+            subscription = subscriptionDto;
+        }
         public bool IsAuthentificated
         {
             get { return isAuthentificated; }
@@ -54,6 +61,11 @@ namespace FitZone.Client.Shared.Utilities
         public string GetId
         {
             get { return id; }
+        }
+
+        public SubscriptionDto GetSubscription
+        {
+            get { return subscription; }
         }
     }
 

@@ -115,6 +115,20 @@ namespace FitZone.AuthService.Controllers
             }
         }
 
+        [HttpGet("userid/{id}")]
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            try
+            {
+                var user = await authService.GetUserById(id);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut]
         public async Task<IActionResult> PutUser(UpdateUser updatedUser)
         {

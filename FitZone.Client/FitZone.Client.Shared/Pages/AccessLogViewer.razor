@@ -1,0 +1,99 @@
+﻿@page "/AccessHistory"
+@inject ISubscriptionValidationService ValidationService
+@using System.Globalization
+
+<h3 class="mb-4">Gym Access</h3>
+
+<div class="row g-3 align-items-end mb-4">
+    <div class="col-md-3">
+        <label for="startDate" class="form-label">Start Date</label>
+        <InputDate @bind-Value="startDate" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label for="endDate" class="form-label">End Date</label>
+        <InputDate @bind-Value="endDate" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary w-100" @onclick="LoadAccesses">Search</button>
+    </div>
+    @if (isAdmin)
+    {
+        <div class="col-md-3 text-end">
+            <button class="btn btn-outline-secondary w-100" @onclick="ToggleAccessType">
+                View: @((showEmployees ? "Employees" : "Clients"))
+            </button>
+        </div>
+    }
+</div>
+
+@if (accesses != null && accesses.Any())
+{
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Validation Type</th>
+                <th>Validation Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var access in accesses)
+            {
+                <tr>
+                    <td>@access.ClientName</td>
+                    @if (access.ValidationType == 0)
+                    {
+                        <td>Entry</td>
+                    }
+                    else
+                    {
+                        <td>Exit</td>
+                    }
+                    <td>@access.DataValidare.ToString("g", CultureInfo.CurrentCulture)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (loaded)
+{
+    <div class="alert alert-info">There are no accesses in the selected period.</div>
+}
+
+@code {
+    private DateTime startDate = DateTime.Today;
+    private DateTime endDate = DateTime.Today;
+
+    private bool showEmployees = false;
+    private bool isAdmin = false;
+    private bool loaded = false;
+
+    private List<ClientAccessDto> accesses = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAdmin = UserState.Instance.GetRole == "GymManager";
+    }
+
+    private async Task LoadAccesses()
+    {
+        var start = new DateTime(startDate.Year, startDate.Month, startDate.Day,
+                                 startDate.Hour, startDate.Minute, 0);
+
+        var end = new DateTime(endDate.Year, endDate.Month, endDate.Day,
+                               endDate.Hour, endDate.Minute, 59);
+
+        accesses = showEmployees
+            ? await ValidationService.GetEmployeesAccesses(start, end)
+            : await ValidationService.GetClientsAccesses(start, end);
+
+        loaded = true;
+    }
+
+    private void ToggleAccessType()
+    {
+        showEmployees = !showEmployees;
+        accesses.Clear();
+        loaded = false;
+    }
+}

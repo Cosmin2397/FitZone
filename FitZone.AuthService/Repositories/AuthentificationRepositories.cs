@@ -234,6 +234,17 @@ namespace FitZone.AuthService.Repositories
             return userDto;
         }
 
+        public async Task<UserDto> GetUserById(Guid id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var userDto = new UserDto();
+            if (user != null)
+            {
+                userDto.ConvertFromApplicationUser(user);
+                userDto.Roles = (List<string>)await _userManager.GetRolesAsync(user);
+            }
+            return userDto;
+        }
 
         public async Task<bool> DeleteUser(string email)
         {

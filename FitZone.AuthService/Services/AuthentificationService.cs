@@ -33,6 +33,11 @@ namespace FitZone.AuthService.Services
             return await _authRepository.GetUserByEmail(email);
         }
 
+        public async Task<UserDto> GetUserById(Guid id)
+        {
+            return await _authRepository.GetUserById(id);
+        }
+
         public async Task<LoginResponse> LoginUser(LoginModel user)
         {
             return await _authRepository.LoginUser(user);

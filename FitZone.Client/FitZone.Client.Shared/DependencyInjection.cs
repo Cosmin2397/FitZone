@@ -17,8 +17,13 @@ namespace FitZone.Client.Shared
 
             services.AddScoped<IAuthentificationService, AuthentificationService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<ISubscriptionValidationService, SubscriptionValidationService>();
             services.AddScoped<StorageService>();
-
+#if ANDROID
+#else
+            // Dacă NU e Android, adaugă alt singleton sau implementare fallback
+            services.AddSingleton<IQrCodeScannerService, FallbackQrCodeScannerService>();
+#endif
             return services;
         }
     }
