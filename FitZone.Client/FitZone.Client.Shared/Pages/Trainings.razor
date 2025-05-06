@@ -1,0 +1,142 @@
+﻿@page "/trainings"
+@inject ITrainingsService trainingsService
+@inject IAuthentificationService authService
+
+<h1 class="page-title">Training Sessions</h1>
+
+<div class="filter-section">
+    <label>Date:</label>
+    <input type="date" @bind="selectedDate" class="date-picker" />
+
+    <label>Type:</label>
+    <select @bind="selectedType" class="type-filter">
+        @if (UserState.Instance.GetSubscription.SubscriptionType == "PersonalTrainer")
+        {
+            <option value="PersonalTrainer">Personal Trainer</option>
+        }
+        <option value="FitnessClass">Fitness Class</option>
+    </select>
+    <button class="btn" @onclick="LoadTrainingsFromApi">Search</button>
+</div>
+
+@if (isLoading)
+{
+    <p class="loading-text">Loading trainings...</p>
+}
+else if (filteredTrainings.Any())
+{
+    <div class="training-list">
+        @foreach (var training in filteredTrainings)
+        {
+            <div class="training-card">
+                <h2>@training.TrainingName</h2>
+
+                <div class="training-info-grid">
+                    <div>
+                        <p><strong>Description:</strong> @training.TrainingDescription</p>
+                        <p><strong>Time:</strong> @training.StartDate:HH:mm - @training.FinishDate:HH:mm</p>
+                        <p><strong>Free Slots:</strong> @training.FreeSlots/@training.Slots</p>
+                        <p><strong>Note:</strong> @training.Comentariu</p>
+                    </div>
+                    <div class="badges-column">
+                        <span class="badge badge-type">@training.Type</span>
+                        <span class="badge badge-status">@training.TrainingStatus</span>
+                        <span class="badge badge-difficulty">@training.DifficultyLevel</span>
+                    </div>
+                </div>
+
+                <button @onclick="() => ToggleClients(training.Id)" class="btn-info">View Scheduled Users</button>
+                @if(training.FreeSlots > 0)
+                {
+                    <button @onclick="() => AddSchedule(training.Id)" class="btn">Book a Place</button>
+                }
+                @if (selectedTrainingId == training.Id)
+                {
+                    <ul class="client-list">
+                        @foreach (var client in training.ScheduledClients)
+                        {
+                            @if (client.ScheduleStatus == "Accepted")
+                            {
+                                <li>@client.ClientName - (@client.ScheduleStatus)</li>
+                            }
+                        }
+                    </ul>
+                }
+            </div>
+
+        }
+    </div>
+}
+else
+{
+    <p class="no-results">No trainings found for the selected date and type.</p>
+}
+
+@code {
+    private DateTime selectedDate = DateTime.Today;
+    private string selectedType = "FitnessClass";
+    private bool isLoading = true;
+    private Guid? selectedTrainingId;
+
+    private List<TrainingDto> allTrainings = new();
+
+    private List<TrainingDto> filteredTrainings =>
+        allTrainings
+            .Where(t =>
+                t.StartDate.Date == selectedDate.Date &&
+                (string.IsNullOrWhiteSpace(selectedType) || t.Type == selectedType)
+            )
+            .ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTrainingsFromApi();
+    }
+
+    private async Task LoadTrainingsFromApi()
+    {
+        try
+        {
+            isLoading = true;
+            var trainings = await trainingsService.GetPeriodTrainings(selectedDate.Date, selectedDate.Date.AddDays(1).AddTicks(-1), selectedType);
+            if (trainings != null)
+                ProcessTrainings(trainings);
+            allTrainings = trainings;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("Failed to load trainings: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ToggleClients(Guid trainingId)
+    {
+        selectedTrainingId = selectedTrainingId == trainingId ? null : trainingId;
+    }
+
+    private void AddSchedule(Guid trainingId)
+    {
+        selectedTrainingId = selectedTrainingId == trainingId ? null : trainingId;
+    }
+
+
+    private async void ProcessTrainings(List<TrainingDto> trainings)
+    {
+        foreach(var training in trainings)
+        {
+            training.FreeSlots = training.Slots;
+            if(training.ScheduledClients != null && training.ScheduledClients.Count > 0)
+            {
+                training.FreeSlots -= training.ScheduledClients.Where(c => c.ScheduleStatus == "Accepted").Count();
+                foreach(var scheduledClient in training.ScheduledClients)
+                {
+                    scheduledClient.ClientName = await authService.GetUserName(scheduledClient.ClientId);
+                }
+            }
+        }
+    }
+}

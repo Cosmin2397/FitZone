@@ -18,6 +18,7 @@ namespace FitZone.Client.Shared
             services.AddScoped<IAuthentificationService, AuthentificationService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<ISubscriptionValidationService, SubscriptionValidationService>();
+            services.AddScoped<ITrainingsService, TrainingsService>();
             services.AddScoped<StorageService>();
 #if ANDROID
 #else

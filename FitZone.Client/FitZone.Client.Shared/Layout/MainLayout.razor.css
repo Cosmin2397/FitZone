@@ -36,24 +36,7 @@ main {
     color: white;
 }
 
-/* Buton logout */
-.logout-btn {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.95rem;
-    font-weight: bold;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid white;
-    border-radius: 8px;
-    transition: background 0.3s ease, transform 0.2s ease;
-    backdrop-filter: blur(4px);
-}
 
-    .logout-btn:hover {
-        background-color: rgba(255, 255, 255, 0.3);
-        transform: scale(1.03);
-        cursor: pointer;
-    }
 
 .top-row {
     background-color: #f7f7f7;

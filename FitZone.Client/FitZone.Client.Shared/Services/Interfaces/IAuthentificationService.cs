@@ -23,5 +23,6 @@ namespace FitZone.Client.Shared.Services.Interfaces
 
         Task<bool> UpdateUser(UserDto user);
 
+        Task<string> GetUserName(Guid clientId);
     }
 }

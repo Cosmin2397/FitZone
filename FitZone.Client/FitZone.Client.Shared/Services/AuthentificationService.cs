@@ -124,5 +124,31 @@ namespace FitZone.Client.Shared.Services
             var response = await _httpClient.SendAsync(requestMessage);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<string> GetUserName(Guid clientId)
+        {
+            try
+            {
+                string url = $"/authService/Auth/userid/{clientId}";
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var user = await response.Content.ReadFromJsonAsync<UserDto>();
+                    return user.FirstName + " " + user.LastName;
+                }
+                else
+                {
+                    return String.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return String.Empty;
+        }
     }
 }

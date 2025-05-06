@@ -13,8 +13,21 @@
                 <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> My Account
             </NavLink>
         </div>
+        @if(UserState.Instance.GetSubscription != null)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="trainings">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Trainings Calendar
+                </NavLink>
+            </div>
+        }
         @if(UserState.Instance.GetRole == "Client")
         {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="mytrainings">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> My Trainings
+                </NavLink>
+            </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="CalorieTracker">
                     <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Calorie Tracker
@@ -41,6 +54,11 @@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="ClientsJurnal">
                         <span class="bi bi-info-circle-fill-nav-menu" aria-hidden="true"></span> Clients Food Jurnal
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="mytrainings">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> My Trainings
                     </NavLink>
                 </div>
             }
