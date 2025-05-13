@@ -49,18 +49,66 @@
 
         public async Task UpsertMealLogAsync(DailyClientMeals mealLog)
         {
-            if (mealLog.Id == ObjectId.Empty)
+            try
             {
-                mealLog.Id = ObjectId.GenerateNewId();
+                // Verificăm dacă ID-ul este gol și generează unul nou dacă este necesar
+                if (mealLog.Id == ObjectId.Empty)
+                {
+                    mealLog.Id = ObjectId.GenerateNewId();
+                    Console.WriteLine($"S-a generat un nou ID: {mealLog.Id}");
+                }
+                else
+                {
+                    Console.WriteLine($"Se folosește ID-ul existent: {mealLog.Id}");
+                }
+
+                // Verifică dacă documentul există deja
+                var filter = Builders<DailyClientMeals>.Filter.And(
+                    Builders<DailyClientMeals>.Filter.Eq(m => m.ClientId, mealLog.ClientId),
+                    Builders<DailyClientMeals>.Filter.Eq(m => m.Date, mealLog.Date)
+                );
+
+                var existingDocument = await _mealsCollection.Find(filter).FirstOrDefaultAsync();
+                if (existingDocument != null)
+                {
+                    Console.WriteLine($"Document existent găsit cu ID: {existingDocument.Id}");
+
+                    // Dacă documentul există, păstrează ID-ul original pentru a evita probleme
+                    mealLog.Id = existingDocument.Id;
+
+                    // Folosește un filtru bazat pe ID pentru a actualiza documentul existent
+                    var idFilter = Builders<DailyClientMeals>.Filter.Eq(m => m.Id, existingDocument.Id);
+                    var updateResult = await _mealsCollection.ReplaceOneAsync(idFilter, mealLog);
+
+                    Console.WriteLine($"Document actualizat: {updateResult.IsAcknowledged}, ModifiedCount: {updateResult.ModifiedCount}");
+                }
+                else
+                {
+                    Console.WriteLine($"Nu s-a găsit document existent pentru ClientId: {mealLog.ClientId}, Date: {mealLog.Date}");
+
+                    // Inserează un document nou
+                    await _mealsCollection.InsertOneAsync(mealLog);
+
+                    Console.WriteLine($"Document nou inserat cu ID: {mealLog.Id}");
+                }
+
+                // Verifică din nou dacă documentul a fost salvat corect
+                var verifyDoc = await _mealsCollection.Find(filter).FirstOrDefaultAsync();
+                if (verifyDoc != null)
+                {
+                    Console.WriteLine($"Verificare după upsert: Document găsit cu ID: {verifyDoc.Id}");
+                }
+                else
+                {
+                    Console.WriteLine("EROARE: Documentul nu a fost găsit după operațiunea de upsert!");
+                }
             }
-
-            var filter = Builders<DailyClientMeals>.Filter.And(
-                Builders<DailyClientMeals>.Filter.Eq(m => m.ClientId, mealLog.ClientId),
-                Builders<DailyClientMeals>.Filter.Eq(m => m.Date, mealLog.Date)
-            );
-
-            // Folosește ReplaceOneAsync pentru a actualiza sau insera documentul
-            await _mealsCollection.ReplaceOneAsync(filter, mealLog, new ReplaceOptions { IsUpsert = true });
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Eroare în UpsertMealLogAsync: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                throw; // Re-aruncă excepția pentru a putea fi tratată în controller
+            }
         }
 
 

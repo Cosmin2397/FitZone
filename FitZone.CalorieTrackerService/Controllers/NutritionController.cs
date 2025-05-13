@@ -29,8 +29,8 @@ namespace FitZone.CalorieTrackerService.Controllers
             return NotFound();
         }
 
-        [HttpPut("/updatequantity/{newQuantity}")]
-        public IActionResult GetFoodNutrition(FoodItem food, double newQuantity)
+        [HttpPut("updatequantity/{newQuantity}")]
+        public IActionResult GetFoodNutrition([FromBody] FoodItem food, [FromRoute] double newQuantity)
         {
             var nutritionData = _nutritionixService.UpdateFoodSize(food, newQuantity);
             if (nutritionData != null)

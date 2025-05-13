@@ -1,0 +1,160 @@
+﻿@page "/CalorieTracker"
+@inject ICalorieTrackerService CalorieService
+
+@if (!string.IsNullOrEmpty(dailyMeals.PtComment))
+{
+    <div class="coach-comment">
+        <strong>Trainer's Note:</strong> @dailyMeals.PtComment
+    </div>
+}
+
+<div class="meal-tracker">
+    <div class="tracker-controls">
+        <label>Select date:</label>
+        <InputDate class="form-control" @bind-Value="selectedDate" />
+    </div>
+
+    <div class="tracker-controls">
+        <label>Search food item:</label>
+        <div class="input-group">
+            <input class="form-control" @bind="searchTerm" @bind:event="oninput" placeholder="e.g., rice, chicken breast..." />
+            <button class="btn btn-primary" @onclick="SearchFood">Search</button>
+        </div>
+    </div>
+
+    @if (searchedFood != null)
+    {
+        <div class="food-card">
+            <h5>@searchedFood.Name</h5>
+            <div class="badges">
+                <span class="badge bg-primary">🔥 @FormatDouble(searchedFood.Kcal) kcal</span>
+                <span class="badge bg-success">💪 @FormatDouble(searchedFood.Proteins) g protein</span>
+                <span class="badge bg-warning text-dark">🍞 @FormatDouble(searchedFood.Carbs) g carbs</span>
+                <span class="badge bg-info text-dark">🧈 @FormatDouble(searchedFood.Fats) g fat</span>
+            </div>
+            <div class="d-flex align-items-center mt-2">
+                <label class="me-2">Portion (x100g):</label>
+                <input class="form-control me-2" style="width: 100px;" type="number" step="0.1" min="0.1" @bind="searchedFood.NumberOfPortions" />
+                <select class="form-select me-2" style="width: 150px;" @bind="selectedMeal">
+                    @foreach (var meal in Enum.GetValues<MealType>())
+                    {
+                        <option value="@meal">@meal</option>
+                    }
+                </select>
+                <button class="btn btn-success" @onclick="AddFoodToMeal">Add</button>
+            </div>
+        </div>
+    }
+
+    <div class="meal-journal">
+        @foreach (var meal in Enum.GetValues<MealType>())
+        {
+            var mealData = dailyMeals.Meals.FirstOrDefault(m => m.Name == meal);
+            if (mealData != null && mealData.FoodItems.Any())
+            {
+                <div class="card meal-card my-3">
+                    <div class="card-header bg-secondary text-white">
+                        @meal
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in mealData.FoodItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@item.Name</strong>
+                                    <span class="badge bg-primary">@FormatDouble(item.Kcal) kcal</span>
+                                    <span class="badge bg-success">@FormatDouble(item.Proteins)g P</span>
+                                    <span class="badge bg-warning text-dark">@FormatDouble(item.Carbs)g C</span>
+                                    <span class="badge bg-info text-dark">@FormatDouble(item.Fats)g F</span>
+                                    <span class="badge bg-secondary">@FormatDouble(item.MetricPortion * item.NumberOfPortions) g </span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <input type="number" style="width: 80px;" class="form-control me-2" @bind="item.NumberOfPortions" />
+                                    <button class="btn btn-outline-secondary btn-sm me-2" @onclick="() => UpdatePortion(item)">Update</button>
+                                    <button class="btn btn-sm btn-outline-danger" @onclick="() => RemoveFoodFromMeal(meal, item)">Remove</button>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        }
+
+        <div class="d-flex gap-2 mt-4">
+            <button class="btn btn-primary" @onclick="SaveLog">Save Day</button>
+            <button class="btn btn-danger" @onclick="DeleteLog">Delete Day</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private DateTime selectedDate = DateTime.Today;
+    private string searchTerm = "";
+    private FoodItem? searchedFood;
+    private MealType selectedMeal = MealType.Breakfast;
+    private DailyClientMealsDto dailyMeals = new() { Meals = Enum.GetValues<MealType>().Select(m => new Meal { Name = m }).ToList() };
+    private Guid clientId = Guid.Parse(UserState.Instance.GetId);
+
+    protected override async Task OnInitializedAsync() => await LoadDailyMeals();
+
+    private async Task LoadDailyMeals()
+    {
+        var data = await CalorieService.GetDailyLog(selectedDate.ToString("dd-MM-yyyy"), clientId);
+        if (data != null)
+            dailyMeals = data;
+    }
+
+    private async Task SearchFood()
+    {
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+            searchedFood = await CalorieService.GetFoodNutrition(searchTerm);
+    }
+
+    private async Task AddFoodToMeal()
+    {
+        if (searchedFood is null) return;
+
+        var updated = await CalorieService.UpdateQuantity(searchedFood, searchedFood.NumberOfPortions);
+        if (updated is not null)
+        {
+            var meal = dailyMeals.Meals.FirstOrDefault(m => m.Name == selectedMeal);
+            meal?.FoodItems.Add(updated);
+        }
+
+        searchedFood = null;
+        searchTerm = "";
+    }
+
+    private void RemoveFoodFromMeal(MealType mealType, FoodItem item)
+    {
+        var meal = dailyMeals.Meals.FirstOrDefault(m => m.Name == mealType);
+        meal?.FoodItems.Remove(item);
+    }
+
+    private async Task UpdatePortion(FoodItem item)
+    {
+        var updated = await CalorieService.UpdateQuantity(item, item.NumberOfPortions);
+        if (updated is not null)
+        {
+            item.Kcal = updated.Kcal;
+            item.Proteins = updated.Proteins;
+            item.Carbs = updated.Carbs;
+            item.Fats = updated.Fats;
+        }
+    }
+
+    private async Task SaveLog()
+    {
+        dailyMeals.Date = selectedDate.ToString("dd-MM-yyyy");
+        dailyMeals.ClientId = clientId;
+        await CalorieService.UpdateDailyLog(dailyMeals);
+    }
+
+    private async Task DeleteLog()
+    {
+        await CalorieService.DeleteDailyLog(clientId, selectedDate.ToString("dd-MM-yyyy"));
+        dailyMeals = new() { Meals = Enum.GetValues<MealType>().Select(m => new Meal { Name = m }).ToList() };
+    }
+
+    private string FormatDouble(double value) => value.ToString("0.##");
+}
