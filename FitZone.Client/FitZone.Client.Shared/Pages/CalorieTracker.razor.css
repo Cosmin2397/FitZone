@@ -48,3 +48,9 @@
     font-size: 0.95rem;
     font-style: italic;
 }
+
+button.btn-light {
+    font-weight: bold;
+    padding: 0.3rem 0.75rem;
+    font-size: 1.2rem;
+}

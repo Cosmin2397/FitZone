@@ -1,0 +1,85 @@
+﻿@page "/ManageClients"
+@inject IAuthentificationService authService
+@inject ISubscriptionService subscriptionService
+@inject NavigationManager NavigationManager
+
+<h3 class="text-center mb-4">Gym Users</h3>
+
+@if (isLoading)
+{
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+}
+else if (users == null || !users.Any())
+{
+    <div class="alert alert-info text-center">No users found for this gym.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var user in users)
+        {
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@user.UserDto.FirstName @user.UserDto.LastName</h5>
+                        <p class="card-text"><strong>Phone:</strong> @user.UserDto.PhoneNumber</p>
+
+                        @if (user.SubscriptionDto != null && user.SubscriptionDto.ValidUntil >= DateTime.Now)
+                        {
+                            <p class="badge bg-success">Active Subscription</p>
+                            <p><strong>Type:</strong> @user.SubscriptionDto.SubscriptionType</p>
+                            <p><strong>Valid Until:</strong> @user.SubscriptionDto.ValidUntil.ToShortDateString()</p>
+                        }
+                        else
+                        {
+                            <p class="text-danger">No active subscription</p>
+                            <button class="btn btn-sm btn-outline-primary" @onclick="@(() => AddSubscription(user.UserDto.Id))">Add Subscription</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid GymId { get; set; }
+
+    private List<User> users = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        var gymID = UserState.Instance.GetSubscription.GymDetails.GymId;
+        isLoading = true;
+        users = await authService.GetGymUsers(gymID);
+        await AddUserSubscription(users);
+        isLoading = false;
+    }
+
+    private void AddSubscription(Guid userId)
+    {
+        // Navighează către pagina de creare abonament
+        NavigationManager.NavigateTo($"/add-subscription/{userId}");
+    }
+
+    private async Task AddUserSubscription(List<User> users)
+    {
+        foreach (var user in users)
+        {
+            var subscription = await subscriptionService.GetSubscriptionByClientId(user.UserDto.Id.ToString());
+            if (subscription != null)
+            {
+                user.SubscriptionDto = subscription;
+            }
+        }
+    }
+}

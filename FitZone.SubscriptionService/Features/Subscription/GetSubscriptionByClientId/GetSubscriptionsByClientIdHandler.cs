@@ -21,8 +21,8 @@ namespace FitZone.SubscriptionService.Features.Subscription.GetSubscriptionByCli
 
             var result = subscriptions.Select(subscription => new SubscriptionResponse(
                 subscription.Id,
-                subscription.GymId,
                 subscription.ClientId,
+                subscription.GymId,
                 subscription.Type.ToString(),
                 subscription.ClientType.ToString(),
                 subscription.Status.ToString(),

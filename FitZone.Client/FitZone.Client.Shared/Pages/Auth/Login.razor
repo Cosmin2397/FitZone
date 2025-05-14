@@ -3,55 +3,56 @@
 @inject IAuthentificationService userService
 @inject StorageService storageService
 
-@if (!UserState.Instance.IsAuthentificated)
+
+@if (isRegisterOpen)
 {
-    <div class="login-container">
-        <div class="login-card">
-            <h4>Login To FitZone App 👋</h4>
-
-            @if (!string.IsNullOrEmpty(feedbackMessage))
-            {
-                <div class="alert @feedbackClass">
-                    @feedbackMessage
-                </div>
-            }
-
-            <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <InputText @bind-Value="loginModel.Email" class="form-control" placeholder="Enter your email" />
-                    <ValidationMessage For="@(() => loginModel.Email)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <InputText @bind-Value="loginModel.Password" class="form-control" type="password" placeholder="Enter your password" />
-                    <ValidationMessage For="@(() => loginModel.Password)" />
-                </div>
-
-                <button type="submit" class="btn">Login</button>
-            </EditForm>
-        </div>
-    </div>
+    <button @onclick="GoToRegister" class="btn">Go To Login</button>
+    <Register></Register>
 }
 else
 {
-    <div class="login-container">
-        <div class="login-card">
-            <h3>Already Logged In</h3>
-            <button class="btn btn-warning" @onclick="LogoutUser">Logout</button>
-        </div>
-    </div>
-}
+    @if (!UserState.Instance.IsAuthentificated)
+    {
+        <div class="login-container">
+            <div class="login-card">
+                <h4>Login To FitZone App 👋</h4>
 
+                @if (!string.IsNullOrEmpty(feedbackMessage))
+                {
+                    <div class="alert @feedbackClass">
+                        @feedbackMessage
+                    </div>
+                }
+
+                <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <InputText @bind-Value="loginModel.Email" class="form-control" placeholder="Enter your email" />
+                        <ValidationMessage For="@(() => loginModel.Email)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <InputText @bind-Value="loginModel.Password" class="form-control" type="password" placeholder="Enter your password" />
+                        <ValidationMessage For="@(() => loginModel.Password)" />
+                    </div>
+
+                    <button type="submit" class="btn">Login</button>
+                </EditForm>
+                <button @onclick="GoToRegister" class="btn">Register</button>
+            </div>
+        </div>
+        }
+}
 
 @code {
     private LoginRequestDto loginModel = new LoginRequestDto();
     private string feedbackMessage;
     private string feedbackClass;
+    private bool isRegisterOpen = false;
 
     private async Task HandleLogin()
     {
@@ -108,5 +109,17 @@ else
         navigationManager.NavigateTo("/login", true);
     }
 
+    private void GoToRegister()
+    {
+        // Afisam pagina de register
+        if(isRegisterOpen)
+        {
+            isRegisterOpen = false;
+        }
+        else
+        {
+            isRegisterOpen = true;
+        }
+    }
 
 }

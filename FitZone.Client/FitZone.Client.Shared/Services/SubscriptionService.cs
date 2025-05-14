@@ -22,7 +22,6 @@ namespace FitZone.Client.Shared.Services
         public async Task<SubscriptionDto?> GetSubscriptionByClientId(string stringId)
         {
             //test
-            stringId = "EEB6CCF1-FD88-4866-5D41-08DD6881A79F"; 
             if (Guid.TryParse(stringId, out Guid id))
             {
                 // Trimiți cererea API pentru a obține informațiile despre abonamentele clientului
@@ -47,8 +46,6 @@ namespace FitZone.Client.Shared.Services
                     var gymId = subscriptions.GetProperty("gymId").GetString();
                     var subscriptionType = subscriptions.GetProperty("subscriptionType").GetString();
                     var endDate = subscriptions.GetProperty("endDate").GetDateTime();
-                    //test
-                    gymId = "63d84640-11c3-40f6-e1d8-08dd8a5c20cf";
                     // Apoi trimiți o cerere pentru detaliile sălii pe baza gymId
                     var gymResponse = await _httpClient.GetStringAsync($"/gymsService/Gym/{gymId}");
 

@@ -1,0 +1,184 @@
+﻿@page "/register"
+@inject IAuthentificationService userService
+@inject NavigationManager navigationManager
+@using System.Net.Http.Json
+
+<EditForm Model="model" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="card shadow-lg p-4 mt-5" style="max-width: 700px; margin: auto;">
+        <h3 class="text-center mb-4">Register New User</h3>
+
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="model.Email" />
+                <ValidationMessage For="@(() => model.Email)" />
+            </div>
+
+            <div class="mb-3 col-md-6">
+                <label>Phone Number</label>
+                <InputText class="form-control" @bind-Value="model.PhoneNumber" />
+                <ValidationMessage For="@(() => model.PhoneNumber)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label>First Name</label>
+                <InputText class="form-control" @bind-Value="model.FirstName" />
+                <ValidationMessage For="@(() => model.FirstName)" />
+            </div>
+
+            <div class="mb-3 col-md-6">
+                <label>Last Name</label>
+                <InputText class="form-control" @bind-Value="model.LastName" />
+                <ValidationMessage For="@(() => model.LastName)" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label>Password</label>
+                <InputText type="password" class="form-control" @bind-Value="model.Password" />
+                <ValidationMessage For="@(() => model.Password)" />
+            </div>
+
+            <div class="mb-3 col-md-6">
+                <label>Confirm Password</label>
+                <InputText type="password" class="form-control" @bind-Value="model.ConfirmPassword" />
+                <ValidationMessage For="@(() => model.ConfirmPassword)" />
+            </div>
+        </div>
+
+        @if (UserState.Instance.GetRole == "Employee" || UserState.Instance.GetRole == "GymManager" || UserState.Instance.GetRole == "AppManager")
+        {
+            <div class="mb-3">
+                <label>Role</label>
+                <InputSelect class="form-select"
+                             Value="model.RoleName"
+                             ValueChanged="@(EventCallback.Factory.Create<Role>(this, OnRoleChanged))"
+                             ValueExpression="() => model.RoleName">
+                    @foreach (var role in AvailableRoles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </InputSelect>
+
+            </div>
+
+            @if (model.IsEmployee)
+            {
+                <div class="border rounded p-3 mb-3 bg-light">
+                    <h5 class="mb-3">Employee Info</h5>
+
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label>Birthday</label>
+                            <InputDate class="form-control" @bind-Value="model.EmployeeData.Birthday" />
+                        </div>
+
+                        <div class="mb-3 col-md-4">
+                            <label>Start Date</label>
+                            <InputDate class="form-control" @bind-Value="model.EmployeeData.StartDate" />
+                        </div>
+
+                        <div class="mb-3 col-md-4">
+                            <label>Monthly Payment</label>
+                            <InputNumber class="form-control" @bind-Value="model.EmployeeData.MonthlyPayment" />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        <button class="btn btn-primary w-100 mt-2" type="submit" disabled="@isSubmitting">
+            @if (isSubmitting)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true">Registering...</span>
+            }
+            else
+            {
+                <span>Register</span>
+            }
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace(message))
+        {
+            <div class="alert mt-3 @(success ? "alert-success" : "alert-danger")">@message</div>
+        }
+    </div>
+</EditForm>
+
+@code {
+    private RegisterModel model = new()
+    {
+        EmployeeData = new EmployeeInfoModel()
+    };
+
+    private string message = "";
+    private bool success = false;
+    private bool isSubmitting = false;
+    private List<Role> AvailableRoles = new();
+
+    protected override void OnInitialized()
+    {
+        SetAvailableRoles();
+    }
+
+    private void SetAvailableRoles()
+    {
+        var currentRole = UserState.Instance.GetRole;
+
+        AvailableRoles = currentRole switch
+        {
+            "Employee" => new List<Role> { Role.Client },
+            "GymManager" => new List<Role> { Role.Client, Role.Employee, Role.PersonalTrainer },
+            "AppManager" => new List<Role> { Role.GymManager },
+            _ => new List<Role>()
+        };
+
+        if (AvailableRoles.Any())
+            model.RoleName = AvailableRoles.First();
+    }
+
+    private Task OnRoleChanged(Role selectedRole)
+    {
+        model.RoleName = selectedRole;
+        model.IsEmployee = selectedRole == Role.Employee || selectedRole == Role.PersonalTrainer;
+        return Task.CompletedTask;
+    }
+
+
+    private async Task HandleRegister()
+    {
+        isSubmitting = true;
+        message = "";
+
+        try
+        {
+            var response = await userService.Register(model);
+            if (response != null)
+            {
+                message = "Registration successful!";
+                success = true;
+                model = new RegisterModel { EmployeeData = new EmployeeInfoModel() };
+                navigationManager.NavigateTo("/", true);
+                
+            }
+            else
+            {
+                message = "Unsuccessful registration!";
+                success = false;
+            }
+        }
+        catch
+        {
+            message = "Unexpected error occurred.";
+            success = false;
+        }
+
+        isSubmitting = false;
+    }
+}

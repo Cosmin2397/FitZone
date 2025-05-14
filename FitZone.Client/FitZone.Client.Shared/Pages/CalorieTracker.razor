@@ -9,10 +9,14 @@
 }
 
 <div class="meal-tracker">
-    <div class="tracker-controls">
-        <label>Select date:</label>
-        <InputDate class="form-control" @bind-Value="selectedDate" />
-    </div>
+<div class="d-flex align-items-center gap-2">
+    <button class="btn btn-light" @onclick="PreviousDay" title="Ziua anterioară">←</button>
+
+    <InputDate class="form-control" @bind-Value="selectedDate" @onchange="OnDateChanged" />
+
+    <button class="btn btn-light" @onclick="NextDay" title="Ziua următoare">→</button>
+</div>
+
 
     <div class="tracker-controls">
         <label>Search food item:</label>
@@ -154,6 +158,27 @@
     {
         await CalorieService.DeleteDailyLog(clientId, selectedDate.ToString("dd-MM-yyyy"));
         dailyMeals = new() { Meals = Enum.GetValues<MealType>().Select(m => new Meal { Name = m }).ToList() };
+    }
+
+    private async Task PreviousDay()
+    {
+        selectedDate = selectedDate.AddDays(-1);
+        await LoadDailyMeals();
+    }
+
+    private async Task NextDay()
+    {
+        selectedDate = selectedDate.AddDays(1);
+        await LoadDailyMeals();
+    }
+
+    private async Task OnDateChanged(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value?.ToString(), out var newDate))
+        {
+            selectedDate = newDate;
+            await LoadDailyMeals();
+        }
     }
 
     private string FormatDouble(double value) => value.ToString("0.##");

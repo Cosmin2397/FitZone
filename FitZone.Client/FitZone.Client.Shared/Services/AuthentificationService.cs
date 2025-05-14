@@ -16,10 +16,12 @@ namespace FitZone.Client.Shared.Services
     public class AuthentificationService : IAuthentificationService
     {
         private readonly HttpClient _httpClient;
+        private readonly ISubscriptionService _subscriptionService;
 
-        public AuthentificationService(HttpClient httpClient)
+        public AuthentificationService(HttpClient httpClient, ISubscriptionService subscriptionService)
         {
             _httpClient = httpClient;
+            _subscriptionService = subscriptionService;
         }
 
         public async Task<bool> Logout(string email)
@@ -43,12 +45,32 @@ namespace FitZone.Client.Shared.Services
                     return await response.Content.ReadFromJsonAsync<LoginResponseDto>();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
-           return null;
+            return null;
+        }
+
+        public async Task<string> Register(RegisterModel user)
+        {
+            try
+            {
+                user.GymId = UserState.Instance.GetSubscription.GymDetails.GymId;
+                var response = await _httpClient.PostAsJsonAsync("/authService/Auth/add-user", user);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return "Success";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
         }
 
         public async Task<LoginResponseDto> RefreshToken(RefreshTokenDto model)
@@ -67,22 +89,33 @@ namespace FitZone.Client.Shared.Services
             return null;
         }
 
-        public async Task<List<UserDto>> GetUsers()
+        public async Task<List<User>> GetGymUsers(Guid gymId)
         {
-            // Creează un mesaj de cerere HTTP
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "api/User/Users");
-
-            // Adaugă token-ul JWT la cerere
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserState.Instance.GetJwtToken);
-
-            // Trimite cererea și obține răspunsul
-            var response = await _httpClient.SendAsync(requestMessage);
-
-            // Verifică dacă răspunsul este de succes și deserializăm conținutul
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
-                return users;
+                string url = $"/authService/Auth/Users/{gymId}";
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var users = await response.Content.ReadFromJsonAsync<List<UserDto>>();
+                    List<User> userWithSubscription = new List<User>();
+                    foreach (var user in users)
+                    {
+                        var userWithSub = new User
+                        {
+                            UserDto = user,
+                            SubscriptionDto = null
+                        };
+                        userWithSubscription.Add(userWithSub);
+                    }
+                    return userWithSubscription;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
             return null;

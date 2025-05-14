@@ -82,6 +82,25 @@
         cursor: pointer;
     }
 
+.btnRegister {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+    .btnRegister:hover {
+        background: #5c636a;
+        cursor: pointer;
+    }
+
+
 /* Feedback (succes / eroare) */
 .alert {
     margin-bottom: 20px;

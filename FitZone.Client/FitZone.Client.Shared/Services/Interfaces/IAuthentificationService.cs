@@ -11,11 +11,13 @@ namespace FitZone.Client.Shared.Services.Interfaces
     {
         Task<LoginResponseDto> Login(LoginRequestDto user);
 
+        Task<string> Register(RegisterModel user);
+
         Task<bool> Logout(string email);
 
         Task<LoginResponseDto> RefreshToken(RefreshTokenDto model);
 
-        Task<List<UserDto>> GetUsers();
+        Task<List<User>> GetGymUsers(Guid gymId);
 
         Task<UserDto> GetUserByEmail(string email);
 
