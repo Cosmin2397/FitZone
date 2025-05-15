@@ -1,4 +1,4 @@
-﻿using FitZone.Client.Shared.DTOs;
+﻿using FitZone.Client.Shared.DTOs.Subscription;
 using FitZone.Client.Shared.Services.Interfaces;
 using FitZone.Client.Shared.Utilities;
 using System;
@@ -69,6 +69,94 @@ namespace FitZone.Client.Shared.Services
             {
                 return null;
             }
+        }
+
+        public async Task<List<GymDetailDto>> GetGyms()
+        {
+            var gyms = new List<GymDetailDto>();
+
+            try
+            {
+                var gymResponse = await _httpClient.GetStringAsync("/gymsService/Gym");
+                var gymList = JsonSerializer.Deserialize<JsonElement>(gymResponse);
+
+                if (gymList.ValueKind != JsonValueKind.Array)
+                    return gyms; // return listă goală dacă nu e array
+
+                foreach (var gymItem in gymList.EnumerateArray())
+                {
+                    if (!gymItem.TryGetProperty("gymData", out var gymData))
+                        continue;
+
+                    var gymName = gymData.GetProperty("name").GetString();
+                    var gymAddress = gymData.GetProperty("address").GetString();
+                    var phoneNumber = gymData.GetProperty("phoneNumber").GetString();
+
+                    var workingHours = new List<string>();
+
+                    if (gymItem.TryGetProperty("weekBusinessHours", out var hours))
+                    {
+                        foreach (var bh in hours.EnumerateArray())
+                        {
+                            var day = Enum.GetName(typeof(DayOfWeek), bh.GetProperty("dayOfWeek").GetInt32());
+
+                            if (bh.GetProperty("isClosed").GetBoolean())
+                            {
+                                workingHours.Add($"{day}: Closed");
+                            }
+                            else
+                            {
+                                var opening = bh.GetProperty("openingHour").GetString();
+                                var closing = bh.GetProperty("closingTime").GetString();
+                                workingHours.Add($"{day}: {opening} - {closing}");
+                            }
+                        }
+                    }
+
+                    gyms.Add(new GymDetailDto
+                    {
+                        GymName = gymName,
+                        GymAddress = gymAddress,
+                        PhoneNumber = phoneNumber,
+                        WorkingHours = workingHours
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+
+            return gyms;
+        }
+
+        public async Task<Guid> AddSubscription(AddSubscriptionRequest subscription)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(subscription);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                // Trimitem cererea POST pentru a adăuga un abonament
+                var response = await _httpClient.PostAsync("/subscriptionService/subscriptions", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    // Dacă cererea a fost reușită, returnăm ID-ul abonamentului creat
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    return Guid.Parse(responseBody);
+                }
+                else
+                {
+                    // Dacă cererea a eșuat, aruncăm o excepție sau gestionăm eroarea
+                    Console.WriteLine("Failed to add subscription");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Gestionăm excepțiile
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+
+            return Guid.Empty; // Returnăm Guid.Empty în caz de eroare
         }
 
         private GymDetailDto GetGymDetails(string gymResponse)

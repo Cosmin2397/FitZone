@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace FitZone.Client.Shared.DTOs
+namespace FitZone.Client.Shared.DTOs.CalorieTracker
 {
     public class DailyClientMealsDto
     {
@@ -25,7 +25,7 @@ namespace FitZone.Client.Shared.DTOs
         public List<FoodItem> FoodItems { get; set; } = new List<FoodItem>();
     }
 
-    [JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum MealType
     {
         Breakfast = 0,

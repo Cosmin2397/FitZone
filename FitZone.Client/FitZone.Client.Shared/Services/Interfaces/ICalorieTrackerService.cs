@@ -1,4 +1,4 @@
-﻿using FitZone.Client.Shared.DTOs;
+﻿using FitZone.Client.Shared.DTOs.CalorieTracker;
 using System;
 using System.Collections.Generic;
 using System.Linq;

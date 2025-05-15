@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FitZone.Client.Shared.DTOs
+namespace FitZone.Client.Shared.DTOs.CalorieTracker
 {
     public class FoodItem
     {

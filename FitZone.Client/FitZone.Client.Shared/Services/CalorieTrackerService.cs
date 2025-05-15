@@ -1,5 +1,4 @@
-﻿using FitZone.Client.Shared.DTOs;
-using FitZone.Client.Shared.Services.Interfaces;
+﻿using FitZone.Client.Shared.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using FitZone.Client.Shared.DTOs.CalorieTracker;
 
 namespace FitZone.Client.Shared.Services
 {

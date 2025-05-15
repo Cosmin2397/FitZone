@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FitZone.Client.Shared.DTOs.Subscription;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FitZone.Client.Shared.DTOs
+namespace FitZone.Client.Shared.DTOs.Auth
 {
     public class User
     {

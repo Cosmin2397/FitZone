@@ -13,6 +13,7 @@
                 <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> My Account
             </NavLink>
         </div>
+       
         @if(UserState.Instance.GetSubscription != null)
         {
             <div class="nav-item px-3">
@@ -20,7 +21,6 @@
                     <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Trainings Calendar
                 </NavLink>
             </div>
-        }
         @if(UserState.Instance.GetRole == "Client")
         {
             <div class="nav-item px-3">
@@ -98,6 +98,7 @@
                     <span class="bi bi-gear-fill-nav-menu" aria-hidden="true"></span> Manage Clients
                 </NavLink>
             </div>
+        }
         }
     </nav>
 </div>

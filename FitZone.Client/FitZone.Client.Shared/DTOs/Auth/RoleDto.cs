@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace FitZone.Client.Shared.DTOs
+namespace FitZone.Client.Shared.DTOs.Auth
 {
     public class RoleDto : IdentityRole<Guid>
     {

@@ -1,4 +1,5 @@
-﻿@inject NavigationManager Navigation
+﻿@using FitZone.Client.Shared.DTOs.Subscription
+@inject NavigationManager Navigation
 @inject ISubscriptionService subscriptionService
 @inject IFormFactor FormFactor
 @inject IQrCodeScannerService QrCodeScannerService
@@ -19,30 +20,30 @@
         }
         else
         {
-        <!-- Cardul de detalii al abonamentului -->
-        <div class="membership-card">
-            <h3>Subscription Details</h3>
-            <p><strong>Gym Name:</strong> @subscription.GymDetails.GymName</p>
-            <p><strong>Address:</strong> @subscription.GymDetails.GymAddress</p>
-            <p><strong>Phone Number:</strong> <a href="tel:@subscription.GymDetails.PhoneNumber">@subscription.GymDetails.PhoneNumber</a></p>
-            <p>
-                <strong>Working Hours:</strong>
-                @foreach (var day in subscription.GymDetails.WorkingHours)
-                {
-                    <div>@day</div>
-                }
-            </p>
+            <!-- Cardul de detalii al abonamentului -->
+            <div class="membership-card">
+                <h3>Subscription Details</h3>
+                <p><strong>Gym Name:</strong> @subscription.GymDetails.GymName</p>
+                <p><strong>Address:</strong> @subscription.GymDetails.GymAddress</p>
+                <p><strong>Phone Number:</strong> <a href="tel:@subscription.GymDetails.PhoneNumber">@subscription.GymDetails.PhoneNumber</a></p>
+                <p>
+                    <strong>Working Hours:</strong>
+                    @foreach (var day in subscription.GymDetails.WorkingHours)
+                    {
+                        <div>@day</div>
+                    }
+                </p>
 
-            <p><strong>Valid Until:</strong> @subscription.ValidUntil.ToString("dd MMMM yyyy")</p>
-            <p><strong>Type:</strong> @subscription.SubscriptionType</p>
-        </div>
+                <p><strong>Valid Until:</strong> @subscription.ValidUntil.ToString("dd MMMM yyyy")</p>
+                <p><strong>Type:</strong> @subscription.SubscriptionType</p>
+            </div>
         }
         @if (platform.StartsWith("android"))
         {
             <!-- Butonul pentru QR code aflat în partea de jos a paginii -->
             <div class="qr-code-btn-container">
-            <button class="btn qr-btn" @onclick="ShowQrCode">Show Access Code</button>
-        </div>
+                <button class="btn qr-btn" @onclick="ShowQrCode">Show Access Code</button>
+            </div>
         }
         <!-- Pop-up pentru QR Code -->
         @if (showQr)
@@ -133,7 +134,11 @@
 
     void GoToBuySubscription()
     {
-        Navigation.NavigateTo("/subscriptions/buy");
+        var userId = UserState.Instance.GetId;
+        if (Guid.TryParse(userId, out Guid id))
+        {
+            Navigation.NavigateTo($"/add-subscription/{id}");
+        }
     }
 
     void GoToSubscriptionHistory()

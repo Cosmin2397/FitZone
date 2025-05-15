@@ -1,4 +1,4 @@
-﻿using FitZone.Client.Shared.DTOs;
+﻿using FitZone.Client.Shared.DTOs.Training;
 using FitZone.Client.Shared.Services.Interfaces;
 using FitZone.Client.Shared.Utilities;
 using System;

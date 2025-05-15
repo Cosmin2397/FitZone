@@ -2,6 +2,7 @@
 @inject IAuthentificationService userService
 @inject NavigationManager navigationManager
 @using System.Net.Http.Json
+@using FitZone.Client.Shared.DTOs.Auth
 
 <EditForm Model="model" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator />

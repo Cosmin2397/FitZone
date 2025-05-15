@@ -1,0 +1,164 @@
+﻿@page "/add-subscription/{ClientId:Guid}"
+@inject ISubscriptionService SubscriptionService
+@inject NavigationManager navigationManager
+@using System.Text.Json
+@using System.Text
+@using System.Globalization
+@using FitZone.Client.Shared.DTOs.Subscription
+
+<div class="form-container">
+    <div class="form-card">
+        <h3 class="form-title">Add Gym Subscription</h3>
+
+        <EditForm Model="@subscription" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            @if (UserState.Instance.GetRole == "Client")
+            {
+                <div class="form-group">
+                    <label>Choose Gym:</label>
+                    <InputSelect @bind-Value="selectedGymId" class="form-input">
+                        <option disabled selected value="">-- choose gym --</option>
+                        @foreach (var gym in gyms)
+                        {
+                            <option value="@gym.GymId.ToString()">@gym.GymName - @gym.GymAddress</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+
+            <div class="form-group">
+                <label>Subscription Type:</label>
+                <InputSelect @bind-Value="subscription.subscriptionType" class="form-input">
+                    @foreach (var type in Enum.GetNames(typeof(SubscriptionType)))
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </InputSelect>
+            </div>
+
+            @if (UserState.Instance.GetRole == "GymManager")
+            {
+                <div class="form-group">
+                    <label>Client Type:</label>
+                    <InputSelect @bind-Value="subscription.clientType" class="form-input">
+                        @foreach (var type in Enum.GetNames(typeof(ClientType)))
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+
+            <div class="form-group">
+                <label>Start Date:</label>
+                <InputDate @bind-Value="subscription.startingDate" class="form-input" />
+            </div>
+
+            <h4 class="section-title">Payment Details</h4>
+
+            <div class="form-group">
+                <label>Type:</label>
+                <InputSelect @bind-Value="subscription.payment.type" class="form-input">
+                    @foreach (var type in Enum.GetNames(typeof(PaymentType)))
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label>Amount:</label>
+                <InputNumber @bind-Value="subscription.payment.amount" class="form-input" />
+            </div>
+
+            <button type="submit" class="form-button">Add Subscription</button>
+
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <p class="form-message">@message</p>
+            }
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ClientId { get; set; }
+
+    private List<GymDetailDto> gyms = new();
+    private string selectedGymId = String.Empty;
+
+
+    private AddSubscriptionRequest subscription;
+
+    private string message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Guid.TryParse(ClientId, out Guid id))
+        {
+            subscription = new AddSubscriptionRequest
+                {
+                    clientId = id,
+                    gymId = Guid.Empty,
+                    startingDate = DateTime.Now,
+                    subscriptionType = SubscriptionType.Normal.ToString(),
+                    clientType = ClientType.Client.ToString(),
+                    payment = new AddPaymentRequest
+                    {
+                        subscriptionId = Guid.Empty,
+                        status = "Accepted",
+                        type = PaymentType.Cash.ToString(),
+                        amount = 0,
+                        paymentDate = DateTime.Now
+                    }
+                };
+
+            if (UserState.Instance.GetRole == "Client")
+            {
+                gyms = await SubscriptionService.GetGyms();
+            }
+            else
+            {
+                var gym = UserState.Instance.GetSubscription.GymDetails;
+                subscription.gymId = gym.GymId;
+            }
+        }
+        else
+        {
+            navigationManager.NavigateTo("javascript:history.back()");
+        }
+    }
+
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            @if (UserState.Instance.GetSubscription != null)
+            {
+                var gymId = UserState.Instance.GetSubscription.GymDetails.GymId;
+                subscription.gymId = gymId;
+            }
+            if (Guid.TryParse(selectedGymId, out Guid selectedGymGuid))
+            {
+                subscription.gymId = selectedGymGuid;
+            }
+            var subscriptionId = await SubscriptionService.AddSubscription(subscription);
+            if (subscriptionId != Guid.Empty)
+            {
+                message = $"Subscription succesfully added! ID: {subscriptionId}";
+            }
+            else
+            {
+                message = "Error!";
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Unexpected error: {ex.Message}";
+        }
+    }
+}

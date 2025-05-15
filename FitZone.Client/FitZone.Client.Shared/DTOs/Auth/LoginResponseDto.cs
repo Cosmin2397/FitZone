@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FitZone.Client.Shared.DTOs
+namespace FitZone.Client.Shared.DTOs.Auth
 {
-    public class RefreshTokenDto
+    public class LoginResponseDto
     {
         public string JwtToken { get; set; }
 

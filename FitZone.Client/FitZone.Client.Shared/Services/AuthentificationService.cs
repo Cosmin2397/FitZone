@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FitZone.Client.Shared.Services.Interfaces;
 using FitZone.Client.Shared.Utilities;
-using FitZone.Client.Shared.DTOs;
+using FitZone.Client.Shared.DTOs.Auth;
 
 namespace FitZone.Client.Shared.Services
 {

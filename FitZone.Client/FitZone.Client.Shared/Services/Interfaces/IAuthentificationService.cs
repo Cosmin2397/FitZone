@@ -1,4 +1,4 @@
-﻿using FitZone.Client.Shared.DTOs;
+﻿using FitZone.Client.Shared.DTOs.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
