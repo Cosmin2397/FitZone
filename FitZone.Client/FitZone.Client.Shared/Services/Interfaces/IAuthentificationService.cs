@@ -21,6 +21,8 @@ namespace FitZone.Client.Shared.Services.Interfaces
 
         Task<UserDto> GetUserByEmail(string email);
 
+        Task<UserDto> GetUserById(Guid id);
+
         Task<bool> DeleteUser(string email);
 
         Task<bool> UpdateUser(UserDto user);

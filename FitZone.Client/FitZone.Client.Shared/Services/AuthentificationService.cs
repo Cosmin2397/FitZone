@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using FitZone.Client.Shared.Services.Interfaces;
 using FitZone.Client.Shared.Utilities;
 using FitZone.Client.Shared.DTOs.Auth;
+using System.Text.Json;
 
 namespace FitZone.Client.Shared.Services
 {
@@ -26,11 +27,18 @@ namespace FitZone.Client.Shared.Services
 
         public async Task<bool> Logout(string email)
         {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, $"api/User/logout/{email}");
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserState.Instance.GetJwtToken);
+            try
+            {
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, $"/authService/Auth/logout/{email}");
 
-            var response = await _httpClient.SendAsync(requestMessage);
-            return response.IsSuccessStatusCode;
+                var response = await _httpClient.SendAsync(requestMessage);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
         }
 
 
@@ -75,16 +83,21 @@ namespace FitZone.Client.Shared.Services
 
         public async Task<LoginResponseDto> RefreshToken(RefreshTokenDto model)
         {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/User/RefreshToken")
+            try
             {
-                Content = JsonContent.Create(model)
-            };
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserState.Instance.GetJwtToken);
-
-            var response = await _httpClient.SendAsync(requestMessage);
-            if (response.IsSuccessStatusCode)
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/authService/Auth/RefreshToken")
+                {
+                    Content = JsonContent.Create(model)
+                };
+                var response = await _httpClient.SendAsync(requestMessage);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+                }
+            }
+            catch (Exception ex)
             {
-                return await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+                Console.WriteLine(ex.Message);
             }
             return null;
         }
@@ -124,34 +137,72 @@ namespace FitZone.Client.Shared.Services
 
         public async Task<UserDto> GetUserByEmail(string email)
         {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, $"api/User/{email}");
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserState.Instance.GetJwtToken);
-
-            var response = await _httpClient.SendAsync(requestMessage);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadFromJsonAsync<UserDto>();
+                string url = $"/authService/Auth/{email}";
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var user = await response.Content.ReadFromJsonAsync<UserDto>();
+                    return user;
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
             return null;
+        }
+
+        public async Task<UserDto> GetUserById(Guid id)
+        {
+            try
+            {
+                string url = $"/authService/Auth/userid/{id}";
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var user = await response.Content.ReadFromJsonAsync<UserDto>();
+                    return user;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
+
+        public async Task<bool> UpdateUser(UserDto userUpdated)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(userUpdated);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                string url = $"/authService/Auth";
+                var response = await _httpClient.PutAsync(url, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
         }
 
 
         public async Task<bool> DeleteUser(string email)
         {
             var requestMessage = new HttpRequestMessage(HttpMethod.Delete, $"api/User/{email}");
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserState.Instance.GetJwtToken);
-
-            var response = await _httpClient.SendAsync(requestMessage);
-            return response.IsSuccessStatusCode;
-        }
-
-
-        public async Task<bool> UpdateUser(UserDto userUpdated)
-        {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Put, $"api/User")
-            {
-                Content = JsonContent.Create(userUpdated)
-            };
             requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserState.Instance.GetJwtToken);
 
             var response = await _httpClient.SendAsync(requestMessage);
